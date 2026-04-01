@@ -115,11 +115,4 @@ npm run dev
 
 ---
 
-## Phase 2 (Admin Side) — What's Ready for You
 
-The following is already wired up and waiting:
-- `role: "admin"` in Firestore user documents
-- `/admin` route protected by `requiredRole="admin"`
-- `orderRequests` collection with `status` and `adminNotes` fields
-- Firestore rules already grant admins full read/write on all collections
-- `users` collection with `isActive` field for user management

@@ -1,223 +1,264 @@
-// src/admin/ReviewOrders.jsx
-// Admin Page 1: Review all order requests, fill in payment details, accept/reject.
+// src/admin/ReviewOrders.jsx — v3: cart-based, shows requester email, editable items
 
 import { useState, useEffect } from "react";
-import { getAllOrderRequests, reviewOrderRequest } from "../firebase/firestoreService";
-
-const PAYMENT_TYPES = ["UPI", "Credit Card", "Debit Card", "Cash", "Bank Transfer"];
-const ORDER_TYPES   = ["Import", "Export", "Domestic", "Internal"];
-const CATEGORIES    = ["Grant", "DGT", "Consumable / Fab / Test", "General"];
+import {
+  getAllOrderRequests, reviewOrderRequest,
+  CATEGORIES, PAYMENT_TYPES, ORDER_TYPES, ORDER_MADE_BY, PRIORITIES, ITEM_TYPES
+} from "../firebase/firestoreService";
 
 const STATUS_STYLE = {
-  pending:  { label: "Pending",  cls: "badge--warning" },
-  approved: { label: "Approved", cls: "badge--active"  },
-  rejected: { label: "Rejected", cls: "badge--faulty"  },
-  ordered:  { label: "Ordered",  cls: "badge--returnable" },
+  pending:   { label: "Pending",   cls: "badge--warning"    },
+  approved:  { label: "Approved",  cls: "badge--active"     },
+  rejected:  { label: "Rejected",  cls: "badge--faulty"     },
+  completed: { label: "Completed", cls: "badge--returnable" },
 };
 
 const PRIORITY_STYLE = {
-  critical: { label: "Critical", cls: "badge--faulty"     },
-  high:     { label: "High",     cls: "badge--ber"         },
-  medium:   { label: "Medium",   cls: "badge--warning"     },
-  low:      { label: "Low",      cls: "badge--active"      },
+  critical: "badge--faulty", high: "badge--ber",
+  medium: "badge--warning",  low:  "badge--active",
 };
 
-const emptyReview = { adminCategory:"", paymentType:"", orderType:"", finalAmount:"", adminRemarks:"", adminNotes:"" };
+const emptyReview = {
+  adminCategory:"", paymentType:"", orderType:"",
+  orderMadeBy:"", finalAmount:"", adminRemarks:"", adminNotes:""
+};
 
 export default function ReviewOrders() {
-  const [orders, setOrders]       = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [filterStatus, setFilter] = useState("all");
-  const [modalOrder, setModal]    = useState(null);
-  const [review, setReview]       = useState(emptyReview);
-  const [saving, setSaving]       = useState(false);
+  const [orders, setOrders]   = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter]   = useState("pending");
+  const [modal, setModal]     = useState(null);
+  const [review, setReview]   = useState(emptyReview);
+  const [editItems, setEditItems] = useState([]);
+  const [saving, setSaving]   = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
 
   useEffect(() => { fetchOrders(); }, []);
 
   async function fetchOrders() {
     setLoading(true);
-    try {
-      const data = await getAllOrderRequests();
-      setOrders(data);
-    } finally {
-      setLoading(false);
-    }
+    try { setOrders(await getAllOrderRequests()); }
+    finally { setLoading(false); }
   }
 
   const openModal = (order) => {
     setModal(order);
     setSaveStatus(null);
+    setEditItems(order.items ? order.items.map((i) => ({ ...i })) : []);
     setReview({
-      adminCategory:  order.adminCategory  || order.category || "",
-      paymentType:    order.paymentType    || "",
-      orderType:      order.orderType      || "",
-      finalAmount:    order.finalAmount    || order.estimatedAmount || "",
-      adminRemarks:   order.adminRemarks   || "",
-      adminNotes:     order.adminNotes     || "",
+      adminCategory: order.adminCategory || order.category || "",
+      paymentType:   order.paymentType   || "",
+      orderType:     order.orderType     || "",
+      orderMadeBy:   order.orderMadeBy   || "",
+      finalAmount:   order.finalAmount   || "",
+      adminRemarks:  order.adminRemarks  || "",
+      adminNotes:    order.adminNotes    || "",
     });
   };
 
   const handleReviewChange = (e) => setReview((p) => ({ ...p, [e.target.name]: e.target.value }));
 
+  // Edit items in modal
+  const handleItemEdit = (idx, field, value) => {
+    setEditItems((prev) => prev.map((item, i) => i === idx ? { ...item, [field]: value } : item));
+  };
+  const removeModalItem = (idx) => setEditItems((p) => p.filter((_, i) => i !== idx));
+  const addModalItem = () => setEditItems((p) => [...p, { name:"", type:"", quantity:"", estimatedAmount:"", notes:"", arrived: false }]);
+
   const handleDecision = async (decision) => {
+    if (editItems.length === 0) { setSaveStatus("error_empty"); return; }
     setSaving(true);
     try {
-      await reviewOrderRequest(modalOrder.id, {
+      // Recalculate finalAmount from items if not manually set
+      const computedTotal = editItems.reduce((s, i) =>
+        s + (parseFloat(i.estimatedAmount) || 0) * (parseInt(i.quantity) || 1), 0);
+
+      await reviewOrderRequest(modal.id, {
         ...review,
-        finalAmount: review.finalAmount ? parseFloat(review.finalAmount) : null,
+        items: editItems,
+        finalAmount: review.finalAmount ? parseFloat(review.finalAmount) : computedTotal,
         status: decision,
       });
-      setOrders((prev) => prev.map((o) => o.id === modalOrder.id ? { ...o, ...review, finalAmount: review.finalAmount ? parseFloat(review.finalAmount) : null, status: decision } : o));
-      setSaveStatus(decision === "approved" ? "approved" : "rejected");
+      setOrders((prev) => prev.map((o) =>
+        o.id === modal.id ? { ...o, ...review, items: editItems, status: decision } : o
+      ));
+      setSaveStatus(decision);
       setTimeout(() => setModal(null), 1200);
     } catch (err) {
       console.error(err);
       setSaveStatus("error");
-    } finally {
-      setSaving(false);
-    }
+    } finally { setSaving(false); }
   };
 
-  const filtered = filterStatus === "all" ? orders : orders.filter((o) => o.status === filterStatus);
+  const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
+  const counts = { all: orders.length, pending: 0, approved: 0, rejected: 0, completed: 0 };
+  orders.forEach((o) => { if (counts[o.status] !== undefined) counts[o.status]++; });
 
   return (
     <div className="page" style={{ maxWidth: "100%" }}>
       <div className="page-header">
         <h2 className="page-title">Review Orders</h2>
-        <p className="page-subtitle">Manage and process incoming order requests</p>
+        <p className="page-subtitle">Review and approve order lists submitted by users</p>
       </div>
 
-      {/* Summary chips */}
       <div className="summary-chips">
-        {["all","pending","approved","rejected","ordered"].map((s) => (
-          <button key={s} onClick={() => setFilter(s)}
-            className={`chip ${filterStatus === s ? "chip--active" : ""}`}>
-            {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
-            <span className="chip-count">{s === "all" ? orders.length : orders.filter(o => o.status === s).length}</span>
+        {["pending","all","approved","rejected","completed"].map((s) => (
+          <button key={s} onClick={() => setFilter(s)} className={`chip ${filter === s ? "chip--active" : ""}`}>
+            {s.charAt(0).toUpperCase() + s.slice(1)}
+            <span className="chip-count">{counts[s]}</span>
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="loading-screen" style={{ height: "200px" }}><div className="loading-spinner" /></div>
+        <div className="loading-screen" style={{ height:"200px" }}><div className="loading-spinner" /></div>
       ) : filtered.length === 0 ? (
-        <div className="empty-state"><p>No {filterStatus === "all" ? "" : filterStatus} orders found.</p></div>
+        <div className="empty-state"><p>No {filter} orders.</p></div>
       ) : (
-        <div className="results-table-wrapper">
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Item</th><th>Qty</th><th>Priority</th><th>Category</th>
-                <th>Est. Amount</th><th>Vendor</th><th>Project</th>
-                <th>Status</th><th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((o) => (
-                <tr key={o.id}>
-                  <td className="td-name">{o.itemName}</td>
-                  <td>{o.quantity}</td>
-                  <td><span className={`badge ${PRIORITY_STYLE[o.priority]?.cls}`}>{PRIORITY_STYLE[o.priority]?.label ?? o.priority}</span></td>
-                  <td>{o.category || "—"}</td>
-                  <td>{o.estimatedAmount ? `₹${o.estimatedAmount.toLocaleString("en-IN")}` : "—"}</td>
-                  <td>{o.suggestedVendor || "—"}</td>
-                  <td>{o.projectName || "—"}</td>
-                  <td><span className={`badge ${STATUS_STYLE[o.status]?.cls}`}>{STATUS_STYLE[o.status]?.label ?? o.status}</span></td>
-                  <td>
-                    <button className="btn-outline-sm" onClick={() => openModal(o)}>
-                      {o.status === "pending" ? "Review" : "Edit"}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div style={{ display:"flex", flexDirection:"column", gap:"0.75rem" }}>
+          {filtered.map((o) => {
+            const total = (o.finalAmount) || o.items?.reduce((s,i) => s+(parseFloat(i.estimatedAmount)||0)*(parseInt(i.quantity)||1),0) || 0;
+            return (
+              <div key={o.id} className="order-card">
+                <div className="order-card-info">
+                  <strong>{o.vendorSite || "—"}</strong>
+                  <span>{o.items?.length || 0} item{o.items?.length !== 1?"s":""}</span>
+                  <span className={`badge ${PRIORITY_STYLE[o.priority]}`}>{o.priority}</span>
+                  <span>{o.projectName || "—"}</span>
+                  <span>{o.category || "—"}</span>
+                  <span className="order-requester">✉ {o.requestedByEmail || "—"}</span>
+                  <span className={`badge ${STATUS_STYLE[o.status]?.cls}`}>{STATUS_STYLE[o.status]?.label}</span>
+                </div>
+                <div style={{ display:"flex", alignItems:"center", gap:"1rem" }}>
+                  {total > 0 && <span style={{ fontFamily:"var(--font-mono)", fontSize:"0.8rem", color:"var(--accent)" }}>₹{total.toLocaleString("en-IN")}</span>}
+                  <button className="btn-outline-sm" onClick={() => openModal(o)}>
+                    {o.status === "pending" ? "Review" : "View / Edit"}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
       {/* Review Modal */}
-      {modalOrder && (
+      {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)}>
-          <div className="modal modal--wide" onClick={(e) => e.stopPropagation()}>
+          <div className="modal modal--wide modal--xl" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Review Order</h3>
+              <h3>Review Order — {modal.vendorSite}</h3>
               <button className="modal-close" onClick={() => setModal(null)}>✕</button>
             </div>
 
-            {/* Order summary */}
-            <div className="order-summary-grid">
-              <div className="summary-item"><span>Item</span><strong>{modalOrder.itemName}</strong></div>
-              <div className="summary-item"><span>Qty</span><strong>{modalOrder.quantity}</strong></div>
-              <div className="summary-item"><span>Priority</span><strong>{modalOrder.priority}</strong></div>
-              <div className="summary-item"><span>Est. Amount</span><strong>{modalOrder.estimatedAmount ? `₹${modalOrder.estimatedAmount.toLocaleString("en-IN")}` : "—"}</strong></div>
-              <div className="summary-item"><span>Vendor</span><strong>{modalOrder.suggestedVendor || "—"}</strong></div>
-              <div className="summary-item"><span>Project</span><strong>{modalOrder.projectName || "—"}</strong></div>
-              {modalOrder.orderLink && (
+            {/* Order meta */}
+            <div className="order-summary-grid" style={{ gridTemplateColumns:"repeat(3,1fr)" }}>
+              <div className="summary-item"><span>Requested By</span><strong>{modal.requestedByEmail || "—"}</strong></div>
+              <div className="summary-item"><span>Project</span><strong>{modal.projectName || "—"}</strong></div>
+              <div className="summary-item"><span>Priority</span><strong>{modal.priority}</strong></div>
+              <div className="summary-item"><span>Category</span><strong>{modal.category || "—"}</strong></div>
+              {modal.orderLink && (
                 <div className="summary-item summary-item--full">
                   <span>Order Link</span>
-                  <a href={modalOrder.orderLink} target="_blank" rel="noreferrer" className="order-link">{modalOrder.orderLink}</a>
+                  <a href={modal.orderLink} target="_blank" rel="noreferrer" className="order-link">{modal.orderLink}</a>
                 </div>
               )}
-              {modalOrder.notes && (
-                <div className="summary-item summary-item--full"><span>User Notes</span><strong>{modalOrder.notes}</strong></div>
-              )}
+              {modal.notes && <div className="summary-item summary-item--full"><span>User Notes</span><strong>{modal.notes}</strong></div>}
+            </div>
+
+            {/* Editable items */}
+            <div style={{ margin:"1rem 0" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"0.5rem" }}>
+                <p className="modal-section-title">Items (editable)</p>
+                <button className="btn-outline-sm" onClick={addModalItem}>+ Add Item</button>
+              </div>
+              {editItems.map((item, idx) => (
+                <div key={idx} className="cart-item-row cart-item-row--compact">
+                  <div className="cart-item-number">{idx+1}</div>
+                  <div className="cart-item-fields">
+                    <div className="form-group">
+                      <label>Name</label>
+                      <input type="text" value={item.name} onChange={(e) => handleItemEdit(idx,"name",e.target.value)} placeholder="Item name" />
+                    </div>
+                    <div className="form-group">
+                      <label>Type</label>
+                      <select value={item.type} onChange={(e) => handleItemEdit(idx,"type",e.target.value)}>
+                        <option value="">Select...</option>
+                        {ITEM_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Qty</label>
+                      <input type="number" min="1" value={item.quantity} onChange={(e) => handleItemEdit(idx,"quantity",e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label>Amount (₹)</label>
+                      <input type="number" min="0" step="0.01" value={item.estimatedAmount} onChange={(e) => handleItemEdit(idx,"estimatedAmount",e.target.value)} />
+                    </div>
+                  </div>
+                  <button className="cart-item-remove" onClick={() => removeModalItem(idx)} title="Remove">✕</button>
+                </div>
+              ))}
+              <div className="cart-total-row">
+                <span>Items Total</span>
+                <strong>₹{editItems.reduce((s,i) => s+(parseFloat(i.estimatedAmount)||0)*(parseInt(i.quantity)||1),0).toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
+              </div>
             </div>
 
             <div className="modal-divider" />
-            <p className="modal-section-title">Admin Review</p>
+            <p className="modal-section-title" style={{ marginBottom:"0.75rem" }}>Admin Review</p>
 
-            <div className="form-grid" style={{ marginTop: "0.75rem" }}>
+            <div className="form-grid">
               <div className="form-group">
-                <label htmlFor="adminCategory">Category</label>
-                <select id="adminCategory" name="adminCategory" value={review.adminCategory} onChange={handleReviewChange}>
+                <label>Category</label>
+                <select name="adminCategory" value={review.adminCategory} onChange={handleReviewChange}>
                   <option value="">Select...</option>
                   {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="finalAmount">Final Amount (₹)</label>
-                <input id="finalAmount" name="finalAmount" type="number" min="0" step="0.01"
-                  value={review.finalAmount} onChange={handleReviewChange} placeholder="0.00" />
+                <label>Final Amount (₹) <span className="field-hint" style={{display:"inline"}}>— leave blank to use items total</span></label>
+                <input name="finalAmount" type="number" min="0" step="0.01" value={review.finalAmount} onChange={handleReviewChange} placeholder="Auto-calculated from items" />
               </div>
               <div className="form-group">
-                <label htmlFor="paymentType">Type of Payment</label>
-                <select id="paymentType" name="paymentType" value={review.paymentType} onChange={handleReviewChange}>
+                <label>Type of Payment</label>
+                <select name="paymentType" value={review.paymentType} onChange={handleReviewChange}>
                   <option value="">Select...</option>
                   {PAYMENT_TYPES.map((p) => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="orderType">Type of Order</label>
-                <select id="orderType" name="orderType" value={review.orderType} onChange={handleReviewChange}>
+                <label>Type of Order</label>
+                <select name="orderType" value={review.orderType} onChange={handleReviewChange}>
                   <option value="">Select...</option>
                   {ORDER_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div className="form-group form-group--full">
-                <label htmlFor="adminRemarks">Remarks</label>
-                <input id="adminRemarks" name="adminRemarks" type="text" value={review.adminRemarks}
-                  onChange={handleReviewChange} placeholder="Short remark for records..." />
+                <label>Order Made By</label>
+                <select name="orderMadeBy" value={review.orderMadeBy} onChange={handleReviewChange}>
+                  <option value="">Select...</option>
+                  {ORDER_MADE_BY.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
               </div>
               <div className="form-group form-group--full">
-                <label htmlFor="adminNotes">Internal Notes</label>
-                <textarea id="adminNotes" name="adminNotes" value={review.adminNotes}
-                  onChange={handleReviewChange} placeholder="Internal notes (not visible to user)..." rows={2} />
+                <label>Remarks</label>
+                <input name="adminRemarks" type="text" value={review.adminRemarks} onChange={handleReviewChange} placeholder="Short remark for records..." />
+              </div>
+              <div className="form-group form-group--full">
+                <label>Internal Notes</label>
+                <textarea name="adminNotes" value={review.adminNotes} onChange={handleReviewChange} rows={2} placeholder="Internal notes (not visible to user)..." />
               </div>
             </div>
 
-            {saveStatus === "approved" && <div className="alert alert--success" style={{ marginTop: "1rem" }}>✓ Order approved.</div>}
-            {saveStatus === "rejected" && <div className="alert alert--error"  style={{ marginTop: "1rem" }}>✗ Order rejected.</div>}
-            {saveStatus === "error"    && <div className="alert alert--error"  style={{ marginTop: "1rem" }}>Failed to save. Try again.</div>}
+            {saveStatus === "approved"    && <div className="alert alert--success" style={{marginTop:"1rem"}}>✓ Order approved.</div>}
+            {saveStatus === "rejected"    && <div className="alert alert--error"   style={{marginTop:"1rem"}}>✗ Order rejected.</div>}
+            {saveStatus === "error"       && <div className="alert alert--error"   style={{marginTop:"1rem"}}>Failed to save. Try again.</div>}
+            {saveStatus === "error_empty" && <div className="alert alert--error"   style={{marginTop:"1rem"}}>Order must have at least one item.</div>}
 
             <div className="modal-actions">
               <button className="btn-secondary" onClick={() => setModal(null)}>Cancel</button>
-              <button className="btn-danger" onClick={() => handleDecision("rejected")} disabled={saving}>
-                {saving ? "..." : "✗ Reject"}
-              </button>
-              <button className="btn-primary" style={{ width: "auto" }} onClick={() => handleDecision("approved")} disabled={saving}>
-                {saving ? "..." : "✓ Approve"}
-              </button>
+              <button className="btn-danger"  onClick={() => handleDecision("rejected")} disabled={saving}>{saving?"...":"✗ Reject"}</button>
+              <button className="btn-primary" style={{width:"auto"}} onClick={() => handleDecision("approved")} disabled={saving}>{saving?"...":"✓ Approve"}</button>
             </div>
           </div>
         </div>

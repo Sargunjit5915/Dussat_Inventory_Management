@@ -1,6 +1,84 @@
-# Inventory Management System — Phase 1 (User Side)
+# Inventory Management System
+### Built with React + Vite and Firebase (Auth + Firestore)
 
-Built with **React + Vite** and **Firebase** (Auth + Firestore).
+This is an internal inventory management tool built for Dussat. It supports two roles — **User** and **Admin** — each with their own dashboard and set of permissions.
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 18 + Vite
+- **Backend/Database:** Firebase (Firestore + Authentication)
+- **Routing:** React Router v6
+- **Styling:** Custom CSS (no UI library)
+
+---
+
+## Getting Started
+
+### 1. Install dependencies
+```bash
+npm install
+```
+
+### 2. Set up Firebase
+1. Go to [console.firebase.google.com](https://console.firebase.google.com) and create a project
+2. Enable **Email/Password** under Build → Authentication
+3. Create a **Firestore Database** (production mode, region: asia-south1)
+4. Register a Web App and copy the config values
+
+### 3. Configure environment variables
+```bash
+cp .env.example .env.local
+```
+Fill in your Firebase config values and set a strong `VITE_ADMIN_SECRET_KEY`. This key is used during registration to grant admin access — keep it private.
+
+### 4. Deploy Firestore security rules
+```bash
+firebase login
+firebase init firestore
+firebase deploy --only firestore:rules
+```
+
+### 5. Run the app
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Role System
+
+| Role | How to get it | Access |
+|------|--------------|--------|
+| `user` | Default on registration | User dashboard |
+| `admin` | Enter admin key at registration | Admin panel |
+
+To register as Admin, click **"Have an admin registration key?"** on the register page and enter the key from your `.env.local`.
+
+Once all admins are set up, you can remove `VITE_ADMIN_SECRET_KEY` from `.env.local` to lock registration permanently.
+
+---
+
+## User Pages
+
+| Route | Page | What it does |
+|-------|------|-------------|
+| `/dashboard/add-inventory` | Add Inventory | Add new items to inventory with type, category, amount, vendor etc. |
+| `/dashboard/search-inventory` | Search & Manage | Search items by name, mark as faulty (Returnable / Fixable / BER), mark fixed, or remove returned items |
+| `/dashboard/order-requests` | Order Requests | Submit order lists grouped by vendor — supports drafts, multiple items per order, auto-calculates total |
+
+---
+
+## Admin Pages
+
+| Route | Page | What it does |
+|-------|------|-------------|
+| `/admin/review-orders` | Review Orders | View all submitted orders, edit item lists, fill in payment/order details, approve or reject |
+| `/admin/order-status` | Order Status | Track approved orders, mark individual items as arrived (auto-adds to inventory), add invoice numbers |
+| `/admin/review-finances` | Review Finances | Full financial overview — in-stock value, yet-to-arrive, category breakdown. All fields editable inline |
+| `/admin/user-management` | User Management | Activate/deactivate users, promote or demote between User and Admin roles |
 
 ---
 
@@ -8,111 +86,25 @@ Built with **React + Vite** and **Firebase** (Auth + Firestore).
 
 ```
 src/
-├── firebase/
-│   ├── config.js           ← Firebase app init (reads from .env.local)
-│   ├── authService.js      ← register, login, logout
-│   └── firestoreService.js ← inventory CRUD, order requests
-├── context/
-│   └── AuthContext.jsx     ← Global auth state + role
-├── components/
-│   ├── ProtectedRoute.jsx  ← Route guard (auth + role)
-│   └── Sidebar.jsx         ← Dashboard navigation
-├── pages/
-│   ├── Login.jsx
-│   ├── Register.jsx
-│   ├── DashboardLayout.jsx ← Sidebar + <Outlet>
-│   ├── AddInventory.jsx    ← Page A
-│   ├── SearchInventory.jsx ← Page B
-│   └── OrderRequests.jsx   ← Page C
-├── App.jsx                 ← Router + all route definitions
-├── main.jsx
+├── admin/              ← Admin-only pages and layout
+├── components/         ← ProtectedRoute, Sidebar
+├── context/            ← AuthContext (global auth + role state)
+├── firebase/           ← config, authService, firestoreService
+├── pages/              ← User-facing pages + DashboardLayout
+├── App.jsx             ← All route definitions
 └── styles.css
 ```
 
 ---
 
-## Setup Instructions
+## Key Notes
 
-### 1. Install dependencies
-```bash
-npm install
-```
-
-### 2. Create your Firebase project
-1. Go to [https://console.firebase.google.com](https://console.firebase.google.com)
-2. Click **Add project** → follow the wizard
-3. In your project: **Build → Authentication → Get started**
-   - Enable **Email/Password** provider
-4. **Build → Firestore Database → Create database**
-   - Start in **production mode** (our rules will handle permissions)
-   - Choose a region close to you
-5. Go to **Project Settings → Your apps → Add app (Web)**
-   - Copy the `firebaseConfig` object values
-
-### 3. Configure environment variables
-```bash
-cp .env.example .env.local
-```
-Edit `.env.local` and fill in all `VITE_FIREBASE_*` values from step 2.
-Also set `VITE_ADMIN_SECRET_KEY` to a strong, secret string.
-
-### 4. Deploy Firestore security rules
-```bash
-# Install Firebase CLI if you haven't
-npm install -g firebase-tools
-firebase login
-firebase init firestore    # select your project, accept defaults
-firebase deploy --only firestore:rules
-```
-
-### 5. Create the required Firestore index
-The name-search query requires a composite index:
-
-**Option A — Firebase Console:**
-- Firestore → Indexes → Add index
-- Collection: `inventory`
-- Fields: `nameLower` (Ascending), `__name__` (Ascending)
-- Scope: Collection
-
-**Option B — Click the auto-generated link:**
-When you first run a search, the browser console will show a Firebase error with a direct link to create the index. Click it.
-
-### 6. Run the development server
-```bash
-npm run dev
-```
+- **Drafts** — Order requests auto-save as drafts. Users can close and return to them anytime before submitting.
+- **Non-Patang projects** automatically get category set to **DGT**.
+- **Arrived items** — When an admin marks an order item as arrived in Order Status, it is automatically added to inventory and becomes searchable.
+- **Inline editing** — Admins can edit inventory fields (category, vendor, location, amount etc.) directly in the Review Finances table without opening a separate form.
+- **Faulty workflow** — Fixable items can be marked as Fixed (restores to active). Returnable items can be removed from inventory entirely.
 
 ---
 
-## Role System
-
-| Role    | How to get it                                       | Access                        |
-|---------|-----------------------------------------------------|-------------------------------|
-| `user`  | Default on registration                             | `/dashboard/*` (all 3 pages)  |
-| `admin` | Enter `VITE_ADMIN_SECRET_KEY` at registration       | `/admin` (Phase 2)            |
-
-**To register as Admin:**
-1. Go to `/register`
-2. Click "Have an admin registration key?"
-3. Enter the key you set in `.env.local`
-
-**To deactivate the admin key** after your admins are created:
-- Remove `VITE_ADMIN_SECRET_KEY` from `.env.local` — no new admins can be registered via key.
-- Existing admins are unaffected.
-
----
-
-## Pages
-
-| Route                           | Page                  | Description                                     |
-|---------------------------------|-----------------------|-------------------------------------------------|
-| `/login`                        | Login                 | Email + password sign-in                        |
-| `/register`                     | Register              | New account + optional admin key                |
-| `/dashboard/add-inventory`      | Page A — Add Item     | Form to add new inventory entries               |
-| `/dashboard/search-inventory`   | Page B — Search       | Search by name, mark items faulty + category    |
-| `/dashboard/order-requests`     | Page C — Orders       | Submit order requests for admin review          |
-| `/admin`                        | Admin (Phase 2)       | Placeholder — to be built next                  |
-
----
-
-
+*For any issues or feature requests, raise them directly with the development team.*

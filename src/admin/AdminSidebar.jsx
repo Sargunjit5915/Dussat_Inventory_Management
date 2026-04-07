@@ -36,7 +36,7 @@ export default function AdminSidebar() {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="sidebar-logo">
-          <span className="logo-mark" style={{ background:"#e74c3c" }}>ADM</span>
+          <span className="logo-mark" style={{ background:"#e74c3c" }}>DUSSAT</span>
           <span className="logo-text">Admin<br />Panel</span>
         </div>
       </div>

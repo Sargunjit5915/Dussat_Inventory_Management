@@ -1073,3 +1073,30 @@ textarea { resize: vertical; min-height: 80px; }
   outline: none;
   box-shadow: 0 0 0 2px rgba(245,166,35,0.2);
 }
+
+/* ── PV-specific styles ───────────────────────────────────── */
+.pv-number-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  color: var(--accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.pv-item-fields {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 2fr 0.5fr 1.5fr 2fr;
+  gap: 0.75rem;
+}
+.pv-item-notes { grid-column: auto; }
+
+@media (max-width: 900px) {
+  .pv-item-fields { grid-template-columns: 1fr 1fr; }
+  .pv-item-notes  { grid-column: 1 / -1; }
+}

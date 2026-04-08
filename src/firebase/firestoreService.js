@@ -21,8 +21,20 @@ export const PAYMENT_TYPES = ["UPI", "Credit Card", "Debit Card", "Cash", "Bank 
 export const ORDER_TYPES   = ["Import", "Export", "Domestic", "Internal"];
 export const ORDER_MADE_BY = ["Commander Mukesh Saini", "Dushyant Chauhan"];
 
-// ─── INVENTORY ────────────────────────────────────────────────
+// ─── INVENTORY (PV-based) ─────────────────────────────────────
+//
+// Each inventory document = one Purchase Voucher (PV)
+// Shape:
+// {
+//   pvNumber, date, description, descriptionLower,
+//   type, category, amount, payee, projectName,
+//   storageLocation, vendor,
+//   items: [{ name, quantity, notes }],
+//   status: "active" | "faulty",
+//   faultyCategory, addedBy, createdAt, updatedAt
+// }
 
+// Add a full PV as one inventory document
 export async function addInventoryItem(itemData, userId) {
   return await addDoc(collection(db, "inventory"), {
     ...itemData,
@@ -34,18 +46,21 @@ export async function addInventoryItem(itemData, userId) {
   });
 }
 
-// Single-field range query — only needs the nameLower index (already set up)
+// Search PVs by description (vendor) OR by any item name inside the PV.
+// Fetches full collection and filters client-side so no composite index needed.
 export async function searchInventoryByName(searchTerm) {
   const term = searchTerm.toLowerCase().trim();
-  const q = query(
-    collection(db, "inventory"),
-    where("nameLower", ">=", term),
-    where("nameLower", "<=", term + "\uf8ff"),
-    orderBy("nameLower"),
-    limit(50)
-  );
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const snapshot = await getDocs(collection(db, "inventory"));
+  const all = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  return all.filter((pv) => {
+    // Match against description/vendor
+    if ((pv.descriptionLower || "").includes(term)) return true;
+    // Match against any item name inside the PV
+    if (pv.items?.some((i) => i.name?.toLowerCase().includes(term))) return true;
+    // Match against PV number
+    if (String(pv.pvNumber || "").toLowerCase().includes(term)) return true;
+    return false;
+  });
 }
 
 export async function markItemFaulty(itemId, faultyCategory, userId) {
@@ -57,7 +72,7 @@ export async function markItemFaulty(itemId, faultyCategory, userId) {
   });
 }
 
-// Fetch entire collection, sort client-side — no composite index needed
+// Fetch entire collection client-side
 export async function getAllInventory() {
   const snapshot = await getDocs(collection(db, "inventory"));
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));

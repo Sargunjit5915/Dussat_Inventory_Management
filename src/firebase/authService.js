@@ -1,5 +1,4 @@
 // src/firebase/authService.js
-// Centralizes all Firebase Auth + Firestore user operations.
 
 import {
   createUserWithEmailAndPassword,
@@ -9,25 +8,16 @@ import {
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "./config";
 
-// ─────────────────────────────────────────────────────────────
-// ADMIN SECRET KEY
-// Set this string in your .env file as VITE_ADMIN_SECRET_KEY=your_secret
-// Anyone who knows this key can register as an Admin.
-// ─────────────────────────────────────────────────────────────
 const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET_KEY ?? "";
 
 /**
  * Register a new user.
- * Creates a Firebase Auth account AND a Firestore user document.
- * If adminKey matches VITE_ADMIN_SECRET_KEY, role is set to "admin".
- *
- * @param {string} email
- * @param {string} password
- * @param {string} displayName
- * @param {string} adminKey  - Optional. Leave blank for regular user registration.
+ * Admins: immediately active + approved.
+ * Regular users: isActive=false, approvalStatus="pending" until admin approves.
  */
 export async function registerUser(email, password, displayName, adminKey = "") {
-  const role = ADMIN_SECRET && adminKey === ADMIN_SECRET ? "admin" : "user";
+  const role    = ADMIN_SECRET && adminKey === ADMIN_SECRET ? "admin" : "user";
+  const isAdmin = role === "admin";
 
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   const uid = credential.user.uid;
@@ -37,24 +27,19 @@ export async function registerUser(email, password, displayName, adminKey = "") 
     email,
     displayName,
     role,
-    createdAt: serverTimestamp(),
-    isActive: true,
+    isActive:       isAdmin,          // admins active immediately, users wait
+    approvalStatus: isAdmin ? "approved" : "pending",
+    createdAt:      serverTimestamp(),
   });
 
   return { user: credential.user, role };
 }
 
-/**
- * Sign in an existing user.
- */
 export async function loginUser(email, password) {
   const credential = await signInWithEmailAndPassword(auth, email, password);
   return credential.user;
 }
 
-/**
- * Sign out the current user.
- */
 export async function logoutUser() {
   await signOut(auth);
 }

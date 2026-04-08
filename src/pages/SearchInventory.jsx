@@ -1,4 +1,4 @@
-// src/pages/SearchInventory.jsx — v3: Mark Faulty + Fixed + Remove (Returnable)
+// src/pages/SearchInventory.jsx — PV-based search
 
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -7,21 +7,21 @@ import { updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/config";
 
 const FAULTY_CATEGORIES = [
-  { value: "returnable", label: "Returnable",               desc: "Can be returned to vendor for refund/replacement" },
-  { value: "fixable",    label: "Fixable",                  desc: "Can be repaired and returned to use" },
+  { value: "returnable", label: "Returnable",                desc: "Can be returned to vendor for refund/replacement" },
+  { value: "fixable",    label: "Fixable",                   desc: "Can be repaired and returned to use" },
   { value: "ber",        label: "BER — Beyond Economic Repair", desc: "Cost of repair exceeds item value" },
 ];
 
-const STATUS_LABELS = {
+const STATUS_LABELS  = {
   active: { label: "Active", class: "badge--active" },
   faulty: { label: "Faulty", class: "badge--faulty" },
 };
-
 const FAULTY_LABELS = {
   returnable: { label: "Returnable", class: "badge--returnable" },
   fixable:    { label: "Fixable",    class: "badge--fixable"    },
   ber:        { label: "BER",        class: "badge--ber"        },
 };
+const fmt = (n) => n ? `₹${Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2 })}` : "—";
 
 export default function SearchInventory() {
   const { user } = useAuth();
@@ -29,33 +29,33 @@ export default function SearchInventory() {
   const [results, setResults]       = useState([]);
   const [searching, setSearching]   = useState(false);
   const [searched, setSearched]     = useState(false);
+  const [expanded, setExpanded]     = useState(null); // expanded PV id
 
-  // Mark faulty modal
   const [modalItem, setModalItem]         = useState(null);
   const [selectedCategory, setSelected]   = useState("");
   const [markingStatus, setMarkingStatus] = useState(null);
 
-  // Confirm remove modal
-  const [removeItem, setRemoveItem]   = useState(null);
-  const [removing, setRemoving]       = useState(false);
+  const [removeItem, setRemoveItem]     = useState(null);
+  const [removing, setRemoving]         = useState(false);
   const [removeStatus, setRemoveStatus] = useState(null);
 
-  // Inline action status per item
-  const [actionStatus, setActionStatus] = useState({}); // { [id]: "loading"|"success"|"error" }
+  const [actionStatus, setActionStatus] = useState({});
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
-    setSearching(true); setSearched(false);
+    setSearching(true); setSearched(false); setExpanded(null);
     try {
-      setResults(await searchInventoryByName(searchTerm));
+      const res = await searchInventoryByName(searchTerm);
+      setResults(res);
+      // Auto-expand if only one result
+      if (res.length === 1) setExpanded(res[0].id);
     } catch (err) { console.error(err); }
     finally { setSearching(false); setSearched(true); }
   };
 
-  // Mark faulty modal
-  const openFaultyModal = (item) => {
-    setModalItem(item); setSelected(""); setMarkingStatus(null);
+  const openFaultyModal = (pv) => {
+    setModalItem(pv); setSelected(""); setMarkingStatus(null);
   };
 
   const handleMarkFaulty = async () => {
@@ -68,31 +68,23 @@ export default function SearchInventory() {
       ));
       setMarkingStatus("success");
       setTimeout(() => setModalItem(null), 1000);
-    } catch (err) {
-      console.error(err); setMarkingStatus("error");
-    }
+    } catch (err) { console.error(err); setMarkingStatus("error"); }
   };
 
-  // Mark as Fixed (Fixable → back to Active)
-  const handleMarkFixed = async (item) => {
-    setActionStatus((p) => ({ ...p, [item.id]: "loading" }));
+  const handleMarkFixed = async (pv) => {
+    setActionStatus((p) => ({ ...p, [pv.id]: "loading" }));
     try {
-      await updateDoc(doc(db, "inventory", item.id), {
-        status: "active",
-        faultyCategory: null,
-        markedFixedBy: user.uid,
+      await updateDoc(doc(db, "inventory", pv.id), {
+        status: "active", faultyCategory: null, markedFixedBy: user.uid,
       });
       setResults((prev) => prev.map((i) =>
-        i.id === item.id ? { ...i, status: "active", faultyCategory: null } : i
+        i.id === pv.id ? { ...i, status: "active", faultyCategory: null } : i
       ));
-      setActionStatus((p) => ({ ...p, [item.id]: "success" }));
-      setTimeout(() => setActionStatus((p) => ({ ...p, [item.id]: null })), 2000);
-    } catch (err) {
-      console.error(err); setActionStatus((p) => ({ ...p, [item.id]: "error" }));
-    }
+      setActionStatus((p) => ({ ...p, [pv.id]: "success" }));
+      setTimeout(() => setActionStatus((p) => ({ ...p, [pv.id]: null })), 2000);
+    } catch (err) { setActionStatus((p) => ({ ...p, [pv.id]: "error" })); }
   };
 
-  // Remove item (Returnable → delete from inventory)
   const handleRemove = async () => {
     setRemoving(true);
     try {
@@ -100,114 +92,139 @@ export default function SearchInventory() {
       setResults((prev) => prev.filter((i) => i.id !== removeItem.id));
       setRemoveStatus("success");
       setTimeout(() => setRemoveItem(null), 800);
-    } catch (err) {
-      console.error(err); setRemoveStatus("error");
-    } finally { setRemoving(false); }
+    } catch (err) { setRemoveStatus("error"); }
+    finally { setRemoving(false); }
   };
 
   return (
     <div className="page">
       <div className="page-header">
         <h2 className="page-title">Search & Manage Inventory</h2>
-        <p className="page-subtitle">Find items and update their status</p>
+        <p className="page-subtitle">Search by item name, vendor, or PV number — click any result to expand</p>
       </div>
 
       <form onSubmit={handleSearch} className="search-bar">
         <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by item name..." className="search-input" />
+          placeholder="Search by item name, vendor, or PV number..." className="search-input" />
         <button type="submit" className="btn-primary" disabled={searching}>
           {searching ? "Searching..." : "Search"}
         </button>
       </form>
 
       {searched && results.length === 0 && (
-        <div className="empty-state"><p>No items found matching "<strong>{searchTerm}</strong>".</p></div>
+        <div className="empty-state"><p>No PVs or items found matching "<strong>{searchTerm}</strong>".</p></div>
       )}
 
       {results.length > 0 && (
-        <div className="results-table-wrapper">
-          <p className="results-count">{results.length} result{results.length !== 1 ? "s" : ""} found</p>
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Name</th><th>Type</th><th>Qty</th><th>Location</th>
-                <th>Vendor</th><th>Brand</th><th>Acquired</th><th>Status</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((item) => (
-                <tr key={item.id}>
-                  <td className="td-name">{item.name}</td>
-                  <td>{item.type}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.storageLocation}</td>
-                  <td>{item.vendor || "—"}</td>
-                  <td>{item.companyBrand || "—"}</td>
-                  <td>{item.dateOfAcquisition}</td>
-                  <td>
-                    <span className={`badge ${STATUS_LABELS[item.status]?.class}`}>
-                      {STATUS_LABELS[item.status]?.label ?? item.status}
+        <div>
+          <p className="results-count">{results.length} PV{results.length !== 1 ? "s" : ""} found</p>
+
+          {results.map((pv) => (
+            <div key={pv.id} className={`order-status-card ${pv.status === "faulty" ? "" : ""}`}
+              style={{ marginBottom: "0.75rem" }}>
+
+              {/* PV Header row */}
+              <div className="order-status-header" onClick={() => setExpanded(expanded === pv.id ? null : pv.id)}>
+                <div className="order-status-meta">
+                  {/* PV number badge */}
+                  <span className="pv-number-badge">PV {pv.pvNumber || "—"}</span>
+                  <strong className="order-status-vendor">{pv.description || "—"}</strong>
+                  <span>{pv.date || "—"}</span>
+                  <span>{pv.type || "—"}</span>
+                  <span className={`badge ${pv.category === "Grant" ? "badge--active" : "badge--returnable"}`}>
+                    {pv.category || "—"}
+                  </span>
+                  <span>{pv.projectName || "—"}</span>
+                  {pv.payee && <span style={{ fontSize:"0.7rem", color:"var(--text-muted)" }}>👤 {pv.payee}</span>}
+                  <span className={`badge ${STATUS_LABELS[pv.status]?.class}`}>
+                    {STATUS_LABELS[pv.status]?.label ?? pv.status}
+                  </span>
+                  {pv.status === "faulty" && pv.faultyCategory && (
+                    <span className={`badge badge--sm ${FAULTY_LABELS[pv.faultyCategory]?.class}`}>
+                      {FAULTY_LABELS[pv.faultyCategory]?.label}
                     </span>
-                    {item.status === "faulty" && item.faultyCategory && (
-                      <span className={`badge badge--sm ${FAULTY_LABELS[item.faultyCategory]?.class}`}>
-                        {FAULTY_LABELS[item.faultyCategory]?.label}
-                      </span>
+                  )}
+                </div>
+
+                <div style={{ display:"flex", alignItems:"center", gap:"0.75rem" }}>
+                  {pv.amount && (
+                    <span style={{ fontFamily:"var(--font-mono)", fontSize:"0.8rem", color:"var(--accent)" }}>
+                      {fmt(pv.amount)}
+                    </span>
+                  )}
+                  <span className="expand-toggle">{expanded === pv.id ? "▲" : "▼"}</span>
+                </div>
+              </div>
+
+              {/* Expanded: items table + actions */}
+              {expanded === pv.id && (
+                <div className="order-status-body">
+
+                  {/* Items table */}
+                  {pv.items?.length > 0 && (
+                    <table className="results-table" style={{ marginBottom:"1rem" }}>
+                      <thead>
+                        <tr><th>#</th><th>Item</th><th>Qty</th><th>Storage Location</th><th>Notes</th></tr>
+                      </thead>
+                      <tbody>
+                        {pv.items.map((item, idx) => (
+                          <tr key={idx}>
+                            <td style={{ fontFamily:"var(--font-mono)", fontSize:"0.7rem", color:"var(--text-muted)" }}>{idx+1}</td>
+                            <td className="td-name">{item.name}</td>
+                            <td>{item.quantity}</td>
+                            <td>{item.storageLocation || "—"}</td>
+                            <td style={{ color:"var(--text-muted)", fontSize:"0.8rem" }}>{item.notes || "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+
+                  {/* PV meta */}
+                  <div className="order-summary-grid" style={{ marginBottom:"1rem" }}>
+                    {pv.payee  && <div className="summary-item"><span>Payee</span><strong>{pv.payee}</strong></div>}
+                    {pv.amount && <div className="summary-item"><span>Amount</span><strong>{fmt(pv.amount)}</strong></div>}
+                  </div>
+
+                  {/* Action buttons */}
+                  <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+                    {pv.status !== "faulty" && (
+                      <button className="btn-danger-sm" onClick={() => openFaultyModal(pv)}>
+                        Mark Faulty
+                      </button>
                     )}
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", alignItems: "center" }}>
-
-                      {/* Not faulty → can mark faulty */}
-                      {item.status !== "faulty" && (
-                        <button className="btn-danger-sm" onClick={() => openFaultyModal(item)}>
-                          Mark Faulty
-                        </button>
-                      )}
-
-                      {/* Fixable → show "Mark Fixed" button */}
-                      {item.status === "faulty" && item.faultyCategory === "fixable" && (
-                        <button
-                          className="btn-outline-sm"
-                          style={{ color: "var(--success)", borderColor: "rgba(46,204,113,0.4)" }}
-                          onClick={() => handleMarkFixed(item)}
-                          disabled={actionStatus[item.id] === "loading"}
-                        >
-                          {actionStatus[item.id] === "loading" ? "..." :
-                           actionStatus[item.id] === "success" ? "✓ Fixed!" : "✓ Mark Fixed"}
-                        </button>
-                      )}
-
-                      {/* Returnable → show "Remove Item" button */}
-                      {item.status === "faulty" && item.faultyCategory === "returnable" && (
-                        <button
-                          className="btn-danger-sm"
-                          onClick={() => { setRemoveItem(item); setRemoveStatus(null); }}
-                        >
-                          Remove Item
-                        </button>
-                      )}
-
-                      {actionStatus[item.id] === "error" && (
-                        <span style={{ fontSize: "0.7rem", color: "var(--danger)" }}>Error</span>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    {pv.status === "faulty" && pv.faultyCategory === "fixable" && (
+                      <button className="btn-outline-sm"
+                        style={{ color:"var(--success)", borderColor:"rgba(46,204,113,0.4)" }}
+                        onClick={() => handleMarkFixed(pv)}
+                        disabled={actionStatus[pv.id] === "loading"}>
+                        {actionStatus[pv.id] === "loading" ? "..." :
+                         actionStatus[pv.id] === "success" ? "✓ Fixed!" : "✓ Mark Fixed"}
+                      </button>
+                    )}
+                    {pv.status === "faulty" && pv.faultyCategory === "returnable" && (
+                      <button className="btn-danger-sm"
+                        onClick={() => { setRemoveItem(pv); setRemoveStatus(null); }}>
+                        Remove PV
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
-      {/* ── Mark Faulty Modal ───────────────────────────────── */}
+      {/* Mark Faulty Modal */}
       {modalItem && (
         <div className="modal-overlay" onClick={() => setModalItem(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Mark as Faulty</h3>
+              <h3>Mark PV as Faulty</h3>
               <button className="modal-close" onClick={() => setModalItem(null)}>✕</button>
             </div>
-            <p className="modal-item-name">"{modalItem.name}"</p>
+            <p className="modal-item-name">PV {modalItem.pvNumber} — "{modalItem.description}"</p>
             <p className="modal-instructions">Select the fault category:</p>
             <div className="fault-options">
               {FAULTY_CATEGORIES.map((cat) => (
@@ -216,14 +233,11 @@ export default function SearchInventory() {
                   <input type="radio" name="faultyCategory" value={cat.value}
                     checked={selectedCategory === cat.value}
                     onChange={() => setSelected(cat.value)} />
-                  <div>
-                    <strong>{cat.label}</strong>
-                    <p>{cat.desc}</p>
-                  </div>
+                  <div><strong>{cat.label}</strong><p>{cat.desc}</p></div>
                 </label>
               ))}
             </div>
-            {markingStatus === "success" && <div className="alert alert--success">✓ Item marked as faulty.</div>}
+            {markingStatus === "success" && <div className="alert alert--success">✓ PV marked as faulty.</div>}
             {markingStatus === "error"   && <div className="alert alert--error">Failed to update. Try again.</div>}
             <div className="modal-actions">
               <button className="btn-secondary" onClick={() => setModalItem(null)}>Cancel</button>
@@ -236,24 +250,23 @@ export default function SearchInventory() {
         </div>
       )}
 
-      {/* ── Remove Item Confirm Modal ───────────────────────── */}
+      {/* Remove PV Confirm Modal */}
       {removeItem && (
         <div className="modal-overlay" onClick={() => setRemoveItem(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Remove Item</h3>
+              <h3>Remove PV</h3>
               <button className="modal-close" onClick={() => setRemoveItem(null)}>✕</button>
             </div>
-            <p className="modal-item-name">"{removeItem.name}"</p>
-            <p className="modal-instructions" style={{ marginBottom: "1.25rem" }}>
-              This item is marked <strong>Returnable</strong>. Removing it will permanently delete it from inventory.
-              This cannot be undone.
+            <p className="modal-item-name">PV {removeItem.pvNumber} — "{removeItem.description}"</p>
+            <p className="modal-instructions" style={{ marginBottom:"1.25rem" }}>
+              This PV is marked <strong>Returnable</strong>. Removing it will permanently delete it and all its items from inventory. This cannot be undone.
             </p>
             {removeStatus === "error" && <div className="alert alert--error">Failed to remove. Try again.</div>}
             <div className="modal-actions">
               <button className="btn-secondary" onClick={() => setRemoveItem(null)}>Cancel</button>
               <button className="btn-danger" onClick={handleRemove} disabled={removing}>
-                {removing ? "Removing..." : "Yes, Remove from Inventory"}
+                {removing ? "Removing..." : "Yes, Remove PV from Inventory"}
               </button>
             </div>
           </div>

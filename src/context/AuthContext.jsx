@@ -1,4 +1,5 @@
 // src/context/AuthContext.jsx
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -7,10 +8,11 @@ import { auth, db } from "../firebase/config";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser]       = useState(null);
-  const [role, setRole]       = useState(null);
-  const [isActive, setActive] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser]                   = useState(null);
+  const [role, setRole]                   = useState(null);
+  const [isActive, setActive]             = useState(true);
+  const [approvalStatus, setApproval]     = useState("approved");
+  const [loading, setLoading]             = useState(true);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -19,14 +21,19 @@ export function AuthProvider({ children }) {
         if (snap.exists()) {
           const data = snap.data();
           setRole(data.role ?? "user");
-          setActive(data.isActive !== false); // default true
+          setActive(data.isActive !== false);
+          setApproval(data.approvalStatus ?? "approved");
         } else {
           setRole("user");
           setActive(true);
+          setApproval("approved");
         }
         setUser(firebaseUser);
       } else {
-        setUser(null); setRole(null); setActive(true);
+        setUser(null);
+        setRole(null);
+        setActive(true);
+        setApproval("approved");
       }
       setLoading(false);
     });
@@ -34,7 +41,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, role, isActive, loading }}>
+    <AuthContext.Provider value={{ user, role, isActive, approvalStatus, loading }}>
       {children}
     </AuthContext.Provider>
   );

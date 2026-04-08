@@ -1,6 +1,6 @@
 // src/admin/ReviewFinances.jsx — v3 updated: inline editing + project name column
 
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { getAllInventory, getAllOrderRequests } from "../firebase/firestoreService";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/config";
@@ -62,6 +62,7 @@ export default function ReviewFinances() {
   const [catFilter, setCatFilter] = useState("All");
   const [activeTab, setActiveTab] = useState("instock");
   const [saving, setSaving]       = useState({});
+  const [expandedPV, setExpandedPV] = useState(null);
 
   useEffect(() => {
     Promise.all([getAllInventory(), getAllOrderRequests()]).then(([inv, ord]) => {
@@ -216,67 +217,98 @@ export default function ReviewFinances() {
                 <table className="results-table">
                   <thead>
                     <tr>
-                      <th>Item</th><th>Type</th><th>Category</th><th>Project</th>
-                      <th>Qty</th><th>Vendor</th><th>Brand</th>
-                      <th>Location</th><th>Date</th><th>Amount (₹)</th><th>Status</th>
-                      <th style={{ width: "30px" }}></th>
+                      <th>PV</th><th>Description / Vendor</th><th>Date</th>
+                      <th>Type</th><th>Category</th><th>Project</th>
+                      <th>Payee</th><th>Location</th><th>Amount (₹)</th><th>Status</th>
+                      <th style={{ width:"30px" }}></th>
                     </tr>
                   </thead>
                   <tbody>
                     {inStock.map((item) => (
-                      <tr key={item.id} style={{ opacity: saving[item.id] ? 0.6 : 1 }}>
-                        <td className="td-name">{item.name}</td>
-                        <td>
-                          <EditCell value={item.type} options={ITEM_TYPES}
-                            onSave={(v) => saveInventoryField(item.id, "type", v)} />
-                        </td>
-                        <td>
-                          <EditCell value={item.category} options={CATEGORIES}
-                            onSave={(v) => saveInventoryField(item.id, "category", v)} />
-                        </td>
-                        <td>
-                          <EditCell value={item.projectName}
-                            onSave={(v) => saveInventoryField(item.id, "projectName", v)} />
-                        </td>
-                        <td>
-                          <EditCell value={String(item.quantity || "")} type="number"
-                            onSave={(v) => saveInventoryField(item.id, "quantity", parseInt(v) || 1)} />
-                        </td>
-                        <td>
-                          <EditCell value={item.vendor}
-                            onSave={(v) => saveInventoryField(item.id, "vendor", v)} />
-                        </td>
-                        <td>
-                          <EditCell value={item.companyBrand}
-                            onSave={(v) => saveInventoryField(item.id, "companyBrand", v)} />
-                        </td>
-                        <td>
-                          <EditCell value={item.storageLocation}
-                            onSave={(v) => saveInventoryField(item.id, "storageLocation", v)} />
-                        </td>
-                        <td>{item.dateOfAcquisition}</td>
-                        <td>
-                          <EditCell value={item.amount ? String(item.amount) : ""} type="number"
-                            onSave={(v) => saveInventoryField(item.id, "amount", parseFloat(v) || 0)} />
-                        </td>
-                        <td>
-                          <span className={`badge ${item.status === "faulty" ? "badge--faulty" : "badge--active"}`}>
-                            {item.status}
-                          </span>
-                          {item.faultyCategory && (
-                            <span className="badge badge--sm badge--ber">{item.faultyCategory}</span>
-                          )}
-                        </td>
-                        <td style={{ fontSize: "0.65rem", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
-                          {saving[item.id] ? "..." : ""}
-                        </td>
-                      </tr>
+                      <React.Fragment key={item.id}>
+                        <tr
+                          style={{ opacity: saving[item.id] ? 0.6 : 1, cursor: "pointer" }}
+                          onClick={() => setExpandedPV(expandedPV === item.id ? null : item.id)}>
+                          <td style={{ fontFamily:"var(--font-mono)", fontSize:"0.72rem", color:"var(--text-muted)" }}>
+                            <span style={{ display:"flex", alignItems:"center", gap:"0.4rem" }}>
+                              <span style={{ fontSize:"0.6rem", color:"var(--accent)" }}>
+                                {expandedPV === item.id ? "▼" : "▶"}
+                              </span>
+                              {item.pvNumber || "—"}
+                            </span>
+                          </td>
+                          <td className="td-name">{item.description || item.name || "—"}</td>
+                          <td>{item.date || item.dateOfAcquisition || "—"}</td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <EditCell value={item.type} options={ITEM_TYPES}
+                              onSave={(v) => saveInventoryField(item.id, "type", v)} />
+                          </td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <EditCell value={item.category} options={CATEGORIES}
+                              onSave={(v) => saveInventoryField(item.id, "category", v)} />
+                          </td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <EditCell value={item.projectName}
+                              onSave={(v) => saveInventoryField(item.id, "projectName", v)} />
+                          </td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <EditCell value={item.payee}
+                              onSave={(v) => saveInventoryField(item.id, "payee", v)} />
+                          </td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <EditCell value={item.storageLocation}
+                              onSave={(v) => saveInventoryField(item.id, "storageLocation", v)} />
+                          </td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <EditCell value={item.amount ? String(item.amount) : ""} type="number"
+                              onSave={(v) => saveInventoryField(item.id, "amount", parseFloat(v) || 0)} />
+                          </td>
+                          <td>
+                            <span className={`badge ${item.status === "faulty" ? "badge--faulty" : "badge--active"}`}>
+                              {item.status}
+                            </span>
+                            {item.faultyCategory && (
+                              <span className="badge badge--sm badge--ber">{item.faultyCategory}</span>
+                            )}
+                          </td>
+                          <td style={{ fontSize:"0.65rem", color:"var(--text-muted)", fontFamily:"var(--font-mono)" }}>
+                            {saving[item.id] ? "..." : ""}
+                          </td>
+                        </tr>
+                        {expandedPV === item.id && item.items?.length > 0 && (
+                          <tr>
+                            <td colSpan={11} style={{ padding:"0", background:"var(--bg)", borderBottom:"2px solid var(--border)" }}>
+                              <div style={{ padding:"0.75rem 1.5rem 0.75rem 2.5rem" }}>
+                                <p style={{ fontFamily:"var(--font-mono)", fontSize:"0.65rem", letterSpacing:"0.1em", textTransform:"uppercase", color:"var(--text-muted)", marginBottom:"0.5rem" }}>
+                                  Items in PV {item.pvNumber} ({item.items.length})
+                                </p>
+                                <table className="results-table" style={{ marginBottom:0 }}>
+                                  <thead>
+                                    <tr><th>#</th><th>Item Name</th><th>Qty</th><th>Storage Location</th><th>Notes</th></tr>
+                                  </thead>
+                                  <tbody>
+                                    {item.items.map((it, idx) => (
+                                      <tr key={idx}>
+                                        <td style={{ fontFamily:"var(--font-mono)", fontSize:"0.68rem", color:"var(--text-muted)" }}>{idx+1}</td>
+                                        <td className="td-name">{it.name}</td>
+                                        <td>{it.quantity}</td>
+                                        <td>{it.storageLocation || "—"}</td>
+                                        <td style={{ color:"var(--text-muted)", fontSize:"0.8rem" }}>{it.notes || "—"}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     ))}
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colSpan={9} style={{ textAlign: "right", fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--text-muted)", paddingRight: "0.75rem" }}>TOTAL</td>
-                      <td style={{ fontWeight: 600, color: "var(--accent)" }}>
+                      <td colSpan={8} style={{ textAlign:"right", fontFamily:"var(--font-mono)", fontSize:"0.75rem", color:"var(--text-muted)", paddingRight:"0.75rem" }}>TOTAL</td>
+                      <td style={{ fontWeight:600, color:"var(--accent)" }}>
                         {fmt(inStock.reduce((s, i) => s + (i.amount || 0), 0))}
                       </td>
                       <td colSpan={2} />

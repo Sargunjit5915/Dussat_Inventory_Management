@@ -12,8 +12,30 @@ const APPROVAL_LABELS = {
   rejected: { label: "Rejected", cls: "badge--faulty"    },
 };
 
+// Only these email addresses can access User Management
+const RESTRICTED_TO = [
+  "commandersaini@dussatglobal.com",
+  // Second email will be added here when provided
+];
+
 export default function UserManagement() {
   const { user: currentUser } = useAuth();
+
+  // Block access if current admin is not in the restricted list
+  if (currentUser && !RESTRICTED_TO.includes(currentUser.email)) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <h2 className="page-title">User Management</h2>
+        </div>
+        <div className="empty-state" style={{ marginTop: "2rem" }}>
+          <p style={{ color: "var(--danger)", fontFamily: "var(--font-mono)", fontSize: "0.8rem" }}>
+            🔒 Access restricted. Only authorised administrators can manage users.
+          </p>
+        </div>
+      </div>
+    );
+  }
   const [users, setUsers]     = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving]   = useState({});

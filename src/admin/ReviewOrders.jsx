@@ -20,7 +20,7 @@ const PRIORITY_STYLE = {
 
 const emptyReview = {
   adminCategory:"", paymentType:"", orderType:"",
-  orderMadeBy:"", finalAmount:"", adminRemarks:"", adminNotes:""
+  orderMadeBy:"", finalAmount:"", gstAmount:"", adminRemarks:"", adminNotes:""
 };
 
 export default function ReviewOrders() {
@@ -51,6 +51,7 @@ export default function ReviewOrders() {
       orderType:     order.orderType     || "",
       orderMadeBy:   order.orderMadeBy   || "",
       finalAmount:   order.finalAmount   || "",
+      gstAmount:     order.gstAmount     || "",
       adminRemarks:  order.adminRemarks  || "",
       adminNotes:    order.adminNotes    || "",
     });
@@ -218,6 +219,10 @@ export default function ReviewOrders() {
               <div className="form-group">
                 <label>Final Amount (₹) <span className="field-hint" style={{display:"inline"}}>— leave blank to use items total</span></label>
                 <input name="finalAmount" type="number" min="0" step="0.01" value={review.finalAmount} onChange={handleReviewChange} placeholder="Auto-calculated from items" />
+              </div>
+              <div className="form-group">
+                <label>GST Amount (₹)</label>
+                <input name="gstAmount" type="number" min="0" step="0.01" value={review.gstAmount} onChange={handleReviewChange} placeholder="0.00" />
               </div>
               <div className="form-group">
                 <label>Type of Payment</label>

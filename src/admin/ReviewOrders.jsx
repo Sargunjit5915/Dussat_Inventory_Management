@@ -195,6 +195,16 @@ export default function ReviewOrders() {
                       <label>Amount (₹)</label>
                       <input type="number" min="0" step="0.01" value={item.estimatedAmount} onChange={(e) => handleItemEdit(idx,"estimatedAmount",e.target.value)} />
                     </div>
+                    <div className="form-group" style={{ gridColumn:"1 / -1" }}>
+                      <label>Notes / Link</label>
+                      <input type="text" value={item.notes||""} onChange={(e) => handleItemEdit(idx,"notes",e.target.value)} placeholder="Item link, spec, or any notes..." />
+                      {item.notes && (item.notes.startsWith("http://") || item.notes.startsWith("https://")) && (
+                        <a href={item.notes} target="_blank" rel="noreferrer"
+                          style={{ fontSize:"0.72rem", color:"var(--accent)", fontFamily:"var(--font-mono)", marginTop:"0.25rem", display:"inline-block", wordBreak:"break-all" }}>
+                          ↗ Open link
+                        </a>
+                      )}
+                    </div>
                   </div>
                   <button className="cart-item-remove" onClick={() => removeModalItem(idx)} title="Remove">✕</button>
                 </div>

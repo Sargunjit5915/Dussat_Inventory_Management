@@ -54,5 +54,11 @@ service cloud.firestore {
                     );
     }
 
+    // ── appData (admin-only config like payee cleared amounts) ───
+    match /appData/{docId} {
+      allow read:  if isAuthed();
+      allow write: if isAdmin();
+    }
+
   }
 }

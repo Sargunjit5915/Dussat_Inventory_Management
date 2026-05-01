@@ -1159,3 +1159,20 @@ textarea { resize: vertical; min-height: 80px; }
 @media (max-width: 900px) {
   .amount-breakdown-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── Sidebar section labels & divider ───────────────────── */
+.sidebar-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.6rem 1.25rem 0.2rem;
+  opacity: 0.6;
+}
+
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.5rem 1rem;
+}

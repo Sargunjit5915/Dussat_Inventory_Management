@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { getAllInventory, getAllOrderRequests } from "../firebase/firestoreService";
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { CATEGORIES, ITEM_TYPES } from "../firebase/firestoreService";
 
@@ -60,6 +60,8 @@ export default function ReviewFinances() {
   const [activeTab, setActiveTab] = useState("instock");
   const [saving, setSaving]       = useState({});
   const [expandedPV, setExpandedPV] = useState(null);
+  const [payeeCleared, setPayeeCleared] = useState({"Commander Mukesh Saini":0,"Dushyant Chauhan":0});
+  const [savingCleared, setSavingCleared] = useState({});
 
   // Time period filter
   const [timePreset, setTimePreset]   = useState("all");
@@ -73,6 +75,10 @@ export default function ReviewFinances() {
     Promise.all([getAllInventory(), getAllOrderRequests()]).then(([inv,ord])=>{
       setInventory(inv); setOrders(ord); setLoading(false);
     });
+    // Load saved cleared amounts from Firestore
+    getDoc(doc(db,"appData","payeeCleared")).then((snap)=>{
+      if (snap.exists()) setPayeeCleared((p)=>({...p,...snap.data()}));
+    }).catch(()=>{});
   }, []);
 
   const saveInventoryField = async (itemId, field, value) => {
@@ -92,6 +98,17 @@ export default function ReviewFinances() {
     const items = pvDoc.items.map((it,i)=>i===itemIdx?{...it,[field]:value}:it);
     await updateDoc(doc(db,"inventory",pvId),{items});
     setInventory((prev)=>prev.map((i)=>i.id===pvId?{...i,items}:i));
+  };
+
+  const saveCleared = async (payee, value) => {
+    const num = parseFloat(value) || 0;
+    setSavingCleared((p)=>({...p,[payee]:true}));
+    try {
+      const updated = {...payeeCleared, [payee]: num};
+      await setDoc(doc(db,"appData","payeeCleared"), updated);
+      setPayeeCleared(updated);
+    } catch(err){ console.error(err); }
+    finally { setSavingCleared((p)=>({...p,[payee]:false})); }
   };
 
   // Compute date range from preset
@@ -145,7 +162,23 @@ export default function ReviewFinances() {
         arrivingGST:   ao.reduce((s,o)=>s+(o.gstAmount||0),0),
       };
     });
-    return { stockBase, stockGST, stockOther, stockTotal, arrivingTotal, arrivingGST, byCat };
+    // Payee breakdown — uses full inventory (not time-filtered) for all-time accuracy
+    const PAYEES = ["Commander Mukesh Saini", "Dushyant Chauhan"];
+    const byPayee = {};
+    PAYEES.forEach((p)=>{
+      const si = inventory.filter((i)=>i.payee===p);
+      const ao = orders.filter((o)=>o.status==="approved"&&o.orderMadeBy===p);
+      byPayee[p]={
+        stockCount:    si.length,
+        stockValue:    si.reduce((s,i)=>s+parseFloat(i.amount||0),0),
+        stockGST:      si.reduce((s,i)=>s+parseFloat(i.gstAmount||0),0),
+        stockTotal:    si.reduce((s,i)=>s+parseFloat(i.amount||0)+parseFloat(i.gstAmount||0)+parseFloat(i.otherAmount||0),0),
+        arrivingCount: ao.length,
+        arrivingValue: ao.reduce((s,o)=>s+parseFloat(o.finalAmount||0),0),
+        arrivingGST:   ao.reduce((s,o)=>s+parseFloat(o.gstAmount||0),0),
+      };
+    });
+    return { stockBase, stockGST, stockOther, stockTotal, arrivingTotal, arrivingGST, byCat, byPayee };
   },[inStock,orders,inventory]);
 
   if (loading) return <div className="loading-screen" style={{height:"300px"}}><div className="loading-spinner"/></div>;
@@ -205,6 +238,53 @@ export default function ReviewFinances() {
                   <td>{d.arrivingCount}</td>
                   <td>{fmt(d.arrivingValue)}</td>
                   <td>{fmt(d.arrivingGST)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Payee Breakdown */}
+      <div className="finance-section">
+        <h3 className="section-title">Payee Breakdown</h3>
+        <table className="results-table">
+          <thead>
+            <tr>
+              <th>Payee</th>
+              <th>In Stock</th><th>Base Value</th><th>GST</th><th>Total</th>
+              <th>Arriving</th><th>Arriving Value</th><th>Arriving GST</th>
+              <th>Amount Cleared (₹)</th><th>Amount Left (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {["Commander Mukesh Saini","Dushyant Chauhan"].map((p)=>{
+              const d=totals.byPayee[p];
+              return (
+                <tr key={p}>
+                  <td className="td-name">{p}</td>
+                  <td>{d.stockCount}</td>
+                  <td>{fmt(d.stockValue)}</td>
+                  <td>{fmt(d.stockGST)}</td>
+                  <td><strong>{fmt(d.stockTotal)}</strong></td>
+                  <td>{d.arrivingCount}</td>
+                  <td>{fmt(d.arrivingValue)}</td>
+                  <td>{fmt(d.arrivingGST)}</td>
+                  <td onClick={(e)=>e.stopPropagation()}>
+                    <EditCell
+                      value={payeeCleared[p]?String(payeeCleared[p]):""}
+                      type="number"
+                      onSave={(v)=>saveCleared(p,v)}
+                    />
+                    {savingCleared[p] && <span style={{fontSize:"0.65rem",color:"var(--text-muted)",marginLeft:"0.25rem"}}>...</span>}
+                  </td>
+                  <td style={{
+                    fontWeight:600,
+                    fontFamily:"var(--font-mono)",
+                    color: (d.stockTotal - (payeeCleared[p]||0)) > 0 ? "var(--danger)" : "var(--success)"
+                  }}>
+                    {fmt(Math.max(0, d.stockTotal - (payeeCleared[p]||0)))}
+                  </td>
                 </tr>
               );
             })}

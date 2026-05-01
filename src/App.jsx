@@ -1,4 +1,4 @@
-// src/App.jsx — v3
+// src/App.jsx — v4: unified admin with user pages
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
@@ -39,6 +39,7 @@ export default function App() {
           <Route path="/register"     element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
+          {/* User dashboard — regular users only */}
           <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="add-inventory" replace />} />
             <Route path="add-inventory"    element={<AddInventory />} />
@@ -46,12 +47,18 @@ export default function App() {
             <Route path="order-requests"   element={<OrderRequests />} />
           </Route>
 
+          {/* Admin panel — includes all admin pages + user pages under admin layout */}
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="review-orders" replace />} />
+            {/* Admin-specific pages */}
             <Route path="review-orders"   element={<ReviewOrders />} />
             <Route path="order-status"    element={<OrderStatus />} />
             <Route path="review-finances" element={<ReviewFinances />} />
             <Route path="user-management" element={<UserManagement />} />
+            {/* User pages accessible from admin panel */}
+            <Route path="add-inventory"    element={<AddInventory />} />
+            <Route path="search-inventory" element={<SearchInventory />} />
+            <Route path="order-requests"   element={<OrderRequests />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/login" replace />} />

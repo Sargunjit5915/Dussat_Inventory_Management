@@ -7,13 +7,13 @@
 
 :root {
   --bg:          #0f1117;
-  --surface:     #181c25;
-  --surface-2:   #1e2330;
-  --border:      #2a3045;
-  --border-2:    #3a4560;
-  --text:        #d4d8e8;
-  --text-muted:  #6b7594;
-  --text-dim:    #8d96b5;
+  --surface:     #1a1f2e;
+  --surface-2:   #212638;
+  --border:      #323a55;
+  --border-2:    #4a5570;
+  --text:        #ffffff;
+  --text-muted:  #a0aac4;
+  --text-dim:    #c4cce0;
   --accent:      #f5a623;
   --accent-dim:  #c4821a;
   --success:     #2ecc71;

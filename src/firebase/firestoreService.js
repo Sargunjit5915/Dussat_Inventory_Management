@@ -1,7 +1,7 @@
 // src/firebase/firestoreService.js — v3 fixed (no composite indexes needed)
 
 import {
-  collection, addDoc, updateDoc, deleteDoc, doc,
+  collection, addDoc, updateDoc, deleteDoc, doc, writeBatch,
   query, where, getDocs, serverTimestamp,
   orderBy, limit, getDoc
 } from "firebase/firestore";
@@ -20,6 +20,36 @@ export const PRIORITIES  = [
 export const PAYMENT_TYPES = ["UPI", "Credit Card", "Debit Card", "Cash", "Bank Transfer"];
 export const ORDER_TYPES   = ["Import", "Export", "Domestic", "Internal"];
 export const ORDER_MADE_BY = ["Commander Mukesh Saini", "Dushyant Chauhan"];
+export const ORDER_CLASSES = [
+  "Motor", "ESC", "Flight Controller (FC)", "Receiver/RC", "Battery",
+  "Frame", "Propeller", "Camera/Gimbal", "Sensor", "Wiring/Connector",
+  "Ground Station", "Other",
+];
+
+// ─── ORDER LIFECYCLE STAGES ────────────────────────────────────
+// order: pipeline position (rejected is a terminal branch off "submitted",
+// not a position on the main line — its order is -1 by convention).
+// cls: badge modifier class from styles.css.
+export const ORDER_STAGES = [
+  { value: "draft",            label: "Draft",            order: 0,  cls: "badge--muted"     },
+  { value: "submitted",        label: "Submitted",        order: 1,  cls: "badge--warning"    },
+  { value: "rejected",         label: "Rejected",         order: -1, cls: "badge--faulty"     },
+  { value: "approved",         label: "Approved",         order: 2,  cls: "badge--active"     },
+  { value: "given_to_vendor",  label: "Given to Vendor",  order: 3,  cls: "badge--returnable" },
+  { value: "vendor_responded", label: "Vendor Responded", order: 4,  cls: "badge--ber"        },
+  { value: "vendor_accepted",  label: "Vendor Accepted",  order: 5,  cls: "badge--returnable" },
+  { value: "payment_done",     label: "Payment Done",     order: 6,  cls: "badge--ber"        },
+  { value: "order_placed",     label: "Order Placed",     order: 7,  cls: "badge--returnable" },
+  { value: "completed",        label: "Completed",        order: 8,  cls: "badge--active"     },
+];
+export const STAGE_BY_VALUE = Object.fromEntries(ORDER_STAGES.map((s) => [s.value, s]));
+
+// "pending" is the legacy name for "submitted" — old docs keep the literal
+// string forever; every place that reads status should normalize first.
+export const normalizeStatus = (status) => (status === "pending" ? "submitted" : status);
+
+// Lightweight vendor-grouping key — no separate vendors collection.
+export const computeVendorKey = (vendorSite) => (vendorSite || "").trim().toLowerCase();
 
 // ─── INVENTORY (PV-based) ─────────────────────────────────────
 //
@@ -84,6 +114,7 @@ export async function getAllInventory() {
 export async function saveDraftOrder(draftData, userId, userEmail, existingId = null) {
   const payload = {
     ...draftData,
+    vendorKey: computeVendorKey(draftData.vendorSite),
     requestedBy: userId,
     requestedByEmail: userEmail,
     status: "draft",
@@ -110,10 +141,10 @@ export async function saveDraftOrder(draftData, userId, userEmail, existingId = 
   }
 }
 
-// Change draft status → pending (submit)
+// Change draft status → submitted
 export async function submitOrderRequest(orderId) {
   await updateDoc(doc(db, "orderRequests", orderId), {
-    status: "pending",
+    status: "submitted",
     updatedAt: serverTimestamp(),
   });
 }
@@ -187,33 +218,135 @@ export async function updateInvoiceNumber(orderId, invoiceNumber) {
   });
 }
 
-// Admin: mark individual item as arrived → auto-creates inventory doc
-export async function markItemsArrived(orderId, itemIndex, item, userId) {
-  // 1. Add to inventory
-  await addInventoryItem({
-    name:              item.name,
-    nameLower:         item.name.toLowerCase().trim(),
-    type:              item.type              || "Capital",
-    quantity:          parseInt(item.quantity) || 1,
-    amount:            item.estimatedAmount   ? parseFloat(item.estimatedAmount) : null,
-    category:          item.category          || null,
-    vendor:            item.vendor            || null,
-    companyBrand:      null,
-    storageLocation:   "Pending assignment",
-    dateOfAcquisition: new Date().toISOString().split("T")[0],
-    sourceOrderId:     orderId,
-  }, userId);
+// Admin: batch-send multiple orders (already "approved") to a vendor in one go
+export async function giveOrdersToVendor(orderIds, adminUserId) {
+  const batch = writeBatch(db);
+  orderIds.forEach((id) => {
+    batch.update(doc(db, "orderRequests", id), {
+      status: "given_to_vendor",
+      givenToVendorAt: serverTimestamp(),
+      givenToVendorBy: adminUserId,
+      updatedAt: serverTimestamp(),
+    });
+  });
+  await batch.commit();
+}
 
-  // 2. Mark item as arrived in the order doc
-  const orderSnap = await getDoc(doc(db, "orderRequests", orderId));
-  if (!orderSnap.exists()) return;
-  const items = [...(orderSnap.data().items || [])];
-  items[itemIndex] = { ...items[itemIndex], arrived: true };
-  const allArrived = items.every((i) => i.arrived);
-
+// Admin: record what the vendor said is available (and any item edits made in response)
+export async function recordVendorResponse(orderId, items) {
   await updateDoc(doc(db, "orderRequests", orderId), {
     items,
-    ...(allArrived ? { status: "completed" } : {}),
+    status: "vendor_responded",
+    vendorRespondedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// Admin: vendor has confirmed the (possibly modified) order
+export async function markVendorAccepted(orderId) {
+  await updateDoc(doc(db, "orderRequests", orderId), {
+    status: "vendor_accepted",
+    vendorAcceptedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// Admin: payment has been made to the vendor
+export async function markPaymentDone(orderId, paymentDetails, adminUserId) {
+  await updateDoc(doc(db, "orderRequests", orderId), {
+    ...paymentDetails,
+    status: "payment_done",
+    paymentDoneAt: serverTimestamp(),
+    paymentDoneBy: adminUserId,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// Admin: order has officially been placed with the vendor
+export async function markOrderPlaced(orderId, adminUserId) {
+  await updateDoc(doc(db, "orderRequests", orderId), {
+    status: "order_placed",
+    orderPlacedAt: serverTimestamp(),
+    orderPlacedBy: adminUserId,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// Admin: mark individual item as arrived → all items from one order accumulate
+// into a single inventory PV doc. Does NOT auto-complete the order — that's
+// now an explicit separate action (see markOrderComplete).
+export async function markItemArrived(orderId, itemIndex, item, userId) {
+  const newItem = {
+    name:            item.name,
+    quantity:        parseInt(item.quantity) || 1,
+    storageLocation: item.storageLocation || "Pending assignment",
+    notes:           item.notes || "",
+    type:            item.type || "Capital",
+  };
+
+  const orderSnap = await getDoc(doc(db, "orderRequests", orderId));
+  if (!orderSnap.exists()) return;
+  const order = { id: orderId, ...orderSnap.data() };
+
+  if (order.inventoryDocId) {
+    // PV doc already exists — append this item to its items[] array
+    const invSnap = await getDoc(doc(db, "inventory", order.inventoryDocId));
+    if (invSnap.exists()) {
+      const existingItems = invSnap.data().items || [];
+      const existingAmount = invSnap.data().amount || 0;
+      const addAmount = item.estimatedAmount ? parseFloat(item.estimatedAmount) : 0;
+      await updateDoc(doc(db, "inventory", order.inventoryDocId), {
+        items:       [...existingItems, newItem],
+        amount:      existingAmount + addAmount,
+        totalAmount: existingAmount + addAmount,
+        updatedAt:   serverTimestamp(),
+      });
+    }
+  } else {
+    // First item arriving — create the PV document for this order
+    const invRef = await addDoc(collection(db, "inventory"), {
+      pvNumber:         order.pvNumber || "—",
+      date:             new Date().toISOString().split("T")[0],
+      description:      order.vendorSite || "Order",
+      descriptionLower: (order.vendorSite || "order").toLowerCase(),
+      type:             item.type || "Capital",
+      category:         order.adminCategory || order.category || null,
+      projectName:      order.projectName   || null,
+      amount:           item.estimatedAmount ? parseFloat(item.estimatedAmount) : null,
+      gstAmount:        order.gstAmount      || null,
+      otherAmount:      null,
+      totalAmount:      item.estimatedAmount ? parseFloat(item.estimatedAmount) : null,
+      payee:            order.orderMadeBy    || null,
+      sourceOrderId:    orderId,
+      items:            [newItem],
+      status:           "active",
+      faultyCategory:   null,
+      addedBy:          userId,
+      createdAt:        serverTimestamp(),
+      updatedAt:        serverTimestamp(),
+    });
+    await updateDoc(doc(db, "orderRequests", orderId), {
+      inventoryDocId: invRef.id,
+      updatedAt:      serverTimestamp(),
+    });
+  }
+
+  // Mark item as arrived in the order doc (status is left untouched)
+  const freshSnap = await getDoc(doc(db, "orderRequests", orderId));
+  if (!freshSnap.exists()) return;
+  const items = [...(freshSnap.data().items || [])];
+  items[itemIndex] = { ...items[itemIndex], arrived: true };
+  await updateDoc(doc(db, "orderRequests", orderId), {
+    items,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// Admin: explicit final action once every item has arrived
+export async function markOrderComplete(orderId) {
+  await updateDoc(doc(db, "orderRequests", orderId), {
+    status: "completed",
+    completedAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
 }

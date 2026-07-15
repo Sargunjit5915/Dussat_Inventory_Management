@@ -3,15 +3,11 @@
 import { useState, useEffect } from "react";
 import {
   getAllOrderRequests, reviewOrderRequest,
-  CATEGORIES, PAYMENT_TYPES, ORDER_TYPES, ORDER_MADE_BY, PRIORITIES, ITEM_TYPES
+  CATEGORIES, PRIORITIES, ITEM_TYPES,
+  ORDER_CLASSES, normalizeStatus,
 } from "../firebase/firestoreService";
-
-const STATUS_STYLE = {
-  pending:   { label: "Pending",   cls: "badge--warning"    },
-  approved:  { label: "Approved",  cls: "badge--active"     },
-  rejected:  { label: "Rejected",  cls: "badge--faulty"     },
-  completed: { label: "Completed", cls: "badge--returnable" },
-};
+import { mergeOrdersByVendor, splitItemsByOrder } from "../utils/mergeOrders";
+import OrderStageTimeline from "../components/OrderStageTimeline";
 
 const PRIORITY_STYLE = {
   critical: "badge--faulty", high: "badge--ber",
@@ -19,14 +15,13 @@ const PRIORITY_STYLE = {
 };
 
 const emptyReview = {
-  adminCategory:"", paymentType:"", orderType:"",
-  orderMadeBy:"", finalAmount:"", gstAmount:"", adminRemarks:"", adminNotes:""
+  adminCategory:"", adminRemarks:"", adminNotes:""
 };
 
 export default function ReviewOrders() {
   const [orders, setOrders]   = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter]   = useState("pending");
+  const [filter, setFilter]   = useState("submitted");
   const [modal, setModal]     = useState(null);
   const [review, setReview]   = useState(emptyReview);
   const [editItems, setEditItems] = useState([]);
@@ -41,19 +36,14 @@ export default function ReviewOrders() {
     finally { setLoading(false); }
   }
 
-  const openModal = (order) => {
-    setModal(order);
+  const openModal = (merged) => {
+    setModal(merged);
     setSaveStatus(null);
-    setEditItems(order.items ? order.items.map((i) => ({ ...i })) : []);
+    setEditItems(merged.items.map((i) => ({ ...i })));
     setReview({
-      adminCategory: order.adminCategory || order.category || "",
-      paymentType:   order.paymentType   || "",
-      orderType:     order.orderType     || "",
-      orderMadeBy:   order.orderMadeBy   || "",
-      finalAmount:   order.finalAmount   || "",
-      gstAmount:     order.gstAmount     || "",
-      adminRemarks:  order.adminRemarks  || "",
-      adminNotes:    order.adminNotes    || "",
+      adminCategory: merged.adminCategory || merged.category || "",
+      adminRemarks:  merged.adminRemarks || "",
+      adminNotes:    merged.adminNotes   || "",
     });
   };
 
@@ -64,24 +54,18 @@ export default function ReviewOrders() {
     setEditItems((prev) => prev.map((item, i) => i === idx ? { ...item, [field]: value } : item));
   };
   const removeModalItem = (idx) => setEditItems((p) => p.filter((_, i) => i !== idx));
-  const addModalItem = () => setEditItems((p) => [...p, { name:"", type:"", quantity:"", estimatedAmount:"", notes:"", arrived: false }]);
+  const addModalItem = () => setEditItems((p) => [...p, { name:"", type:"", orderClass:"", quantity:"", estimatedAmount:"", notes:"", arrived: false }]);
 
   const handleDecision = async (decision) => {
     if (editItems.length === 0) { setSaveStatus("error_empty"); return; }
     setSaving(true);
     try {
-      // Recalculate finalAmount from items if not manually set
-      const computedTotal = editItems.reduce((s, i) =>
-        s + (parseFloat(i.estimatedAmount) || 0) * (parseInt(i.quantity) || 1), 0);
-
-      await reviewOrderRequest(modal.id, {
-        ...review,
-        items: editItems,
-        finalAmount: review.finalAmount ? parseFloat(review.finalAmount) : computedTotal,
-        status: decision,
-      });
+      const buckets = splitItemsByOrder(editItems, modal.memberIds, modal.id);
+      await Promise.all(modal.memberIds.map((orderId) =>
+        reviewOrderRequest(orderId, { ...review, items: buckets[orderId], status: decision })
+      ));
       setOrders((prev) => prev.map((o) =>
-        o.id === modal.id ? { ...o, ...review, items: editItems, status: decision } : o
+        modal.memberIds.includes(o.id) ? { ...o, ...review, items: buckets[o.id], status: decision } : o
       ));
       setSaveStatus(decision);
       setTimeout(() => setModal(null), 1200);
@@ -91,9 +75,10 @@ export default function ReviewOrders() {
     } finally { setSaving(false); }
   };
 
-  const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
-  const counts = { all: orders.length, pending: 0, approved: 0, rejected: 0, completed: 0 };
-  orders.forEach((o) => { if (counts[o.status] !== undefined) counts[o.status]++; });
+  const merged = mergeOrdersByVendor(orders);
+  const filtered = filter === "all" ? merged : merged.filter((m) => normalizeStatus(m.status) === filter);
+  const counts = { all: merged.length, submitted: 0, approved: 0, rejected: 0, completed: 0 };
+  merged.forEach((m) => { const s = normalizeStatus(m.status); if (counts[s] !== undefined) counts[s]++; });
 
   return (
     <div className="page" style={{ maxWidth: "100%" }}>
@@ -103,7 +88,7 @@ export default function ReviewOrders() {
       </div>
 
       <div className="summary-chips">
-        {["pending","all","approved","rejected","completed"].map((s) => (
+        {["submitted","all","approved","rejected","completed"].map((s) => (
           <button key={s} onClick={() => setFilter(s)} className={`chip ${filter === s ? "chip--active" : ""}`}>
             {s.charAt(0).toUpperCase() + s.slice(1)}
             <span className="chip-count">{counts[s]}</span>
@@ -117,23 +102,24 @@ export default function ReviewOrders() {
         <div className="empty-state"><p>No {filter} orders.</p></div>
       ) : (
         <div style={{ display:"flex", flexDirection:"column", gap:"0.75rem" }}>
-          {filtered.map((o) => {
-            const total = (o.finalAmount) || o.items?.reduce((s,i) => s+(parseFloat(i.estimatedAmount)||0)*(parseInt(i.quantity)||1),0) || 0;
+          {filtered.map((m) => {
+            const total = m.finalAmount || m.items.reduce((s,i) => s+(parseFloat(i.estimatedAmount)||0)*(parseInt(i.quantity)||1),0) || 0;
             return (
-              <div key={o.id} className="order-card">
+              <div key={m.mergeKey} className="order-card">
                 <div className="order-card-info">
-                  <strong>{o.vendorSite || "—"}</strong>
-                  <span>{o.items?.length || 0} item{o.items?.length !== 1?"s":""}</span>
-                  <span className={`badge ${PRIORITY_STYLE[o.priority]}`}>{o.priority}</span>
-                  <span>{o.projectName || "—"}</span>
-                  <span>{o.category || "—"}</span>
-                  <span className="order-requester">✉ {o.requestedByEmail || "—"}</span>
-                  <span className={`badge ${STATUS_STYLE[o.status]?.cls}`}>{STATUS_STYLE[o.status]?.label}</span>
+                  <strong>{m.vendorSite}</strong>
+                  {m.isMerged && <span className="field-hint" style={{display:"inline"}}>({m.memberIds.length} requests combined)</span>}
+                  <span>{m.items.length} item{m.items.length !== 1?"s":""}</span>
+                  <span className={`badge ${PRIORITY_STYLE[m.priority]}`}>{m.priority}</span>
+                  <span>{m.projectName || "—"}</span>
+                  <span>{m.category || "—"}</span>
+                  <span className="order-requester">✉ {m.requestedByEmails.join(", ") || "—"}</span>
+                  <OrderStageTimeline status={m.status} variant="badge" />
                 </div>
                 <div style={{ display:"flex", alignItems:"center", gap:"1rem" }}>
                   {total > 0 && <span style={{ fontFamily:"var(--font-mono)", fontSize:"0.8rem", color:"var(--accent)" }}>₹{total.toLocaleString("en-IN")}</span>}
-                  <button className="btn-outline-sm" onClick={() => openModal(o)}>
-                    {o.status === "pending" ? "Review" : "View / Edit"}
+                  <button className="btn-outline-sm" onClick={() => openModal(m)}>
+                    {normalizeStatus(m.status) === "submitted" ? "Review" : "View / Edit"}
                   </button>
                 </div>
               </div>
@@ -153,9 +139,9 @@ export default function ReviewOrders() {
 
             {/* Order meta */}
             <div className="order-summary-grid" style={{ gridTemplateColumns:"repeat(3,1fr)" }}>
-              <div className="summary-item"><span>Requested By</span><strong>{modal.requestedByEmail || "—"}</strong></div>
+              <div className="summary-item"><span>Requested By</span><strong>{modal.requestedByEmails.join(", ") || "—"}</strong></div>
               <div className="summary-item"><span>Project</span><strong>{modal.projectName || "—"}</strong></div>
-              <div className="summary-item"><span>Priority</span><strong>{modal.priority}</strong></div>
+              <div className="summary-item"><span>Priority</span><strong><span className={`badge ${PRIORITY_STYLE[modal.priority]}`}>{modal.priority}</span></strong></div>
               <div className="summary-item"><span>Category</span><strong>{modal.category || "—"}</strong></div>
               {modal.orderLink && (
                 <div className="summary-item summary-item--full">
@@ -177,7 +163,12 @@ export default function ReviewOrders() {
                   <div className="cart-item-number">{idx+1}</div>
                   <div className="cart-item-fields">
                     <div className="form-group">
-                      <label>Name</label>
+                      <label>
+                        Name
+                        {modal.requestedByEmails.length > 1 && item._requestedByEmail && (
+                          <span className="field-hint" style={{display:"inline", marginLeft:"0.4rem"}}>— {item._requestedByEmail}</span>
+                        )}
+                      </label>
                       <input type="text" value={item.name} onChange={(e) => handleItemEdit(idx,"name",e.target.value)} placeholder="Item name" />
                     </div>
                     <div className="form-group">
@@ -185,6 +176,13 @@ export default function ReviewOrders() {
                       <select value={item.type} onChange={(e) => handleItemEdit(idx,"type",e.target.value)}>
                         <option value="">Select...</option>
                         {ITEM_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Class</label>
+                      <select value={item.orderClass || ""} onChange={(e) => handleItemEdit(idx,"orderClass",e.target.value)}>
+                        <option value="">Select...</option>
+                        {ORDER_CLASSES.map((c) => <option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
                     <div className="form-group">
@@ -224,35 +222,6 @@ export default function ReviewOrders() {
                 <select name="adminCategory" value={review.adminCategory} onChange={handleReviewChange}>
                   <option value="">Select...</option>
                   {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Final Amount (₹) <span className="field-hint" style={{display:"inline"}}>— leave blank to use items total</span></label>
-                <input name="finalAmount" type="number" min="0" step="0.01" value={review.finalAmount} onChange={handleReviewChange} placeholder="Auto-calculated from items" />
-              </div>
-              <div className="form-group">
-                <label>GST Amount (₹)</label>
-                <input name="gstAmount" type="number" min="0" step="0.01" value={review.gstAmount} onChange={handleReviewChange} placeholder="0.00" />
-              </div>
-              <div className="form-group">
-                <label>Type of Payment</label>
-                <select name="paymentType" value={review.paymentType} onChange={handleReviewChange}>
-                  <option value="">Select...</option>
-                  {PAYMENT_TYPES.map((p) => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Type of Order</label>
-                <select name="orderType" value={review.orderType} onChange={handleReviewChange}>
-                  <option value="">Select...</option>
-                  {ORDER_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </div>
-              <div className="form-group form-group--full">
-                <label>Order Made By</label>
-                <select name="orderMadeBy" value={review.orderMadeBy} onChange={handleReviewChange}>
-                  <option value="">Select...</option>
-                  {ORDER_MADE_BY.map((o) => <option key={o} value={o}>{o}</option>)}
                 </select>
               </div>
               <div className="form-group form-group--full">

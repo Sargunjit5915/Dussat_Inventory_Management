@@ -15,6 +15,7 @@ const APPROVAL_LABELS = {
 // Only these email addresses can access User Management
 const RESTRICTED_TO = [
   "commandersaini@dussatglobal.com",
+  "sargunjit591@gmail.com"
   // Second email will be added here when provided
 ];
 

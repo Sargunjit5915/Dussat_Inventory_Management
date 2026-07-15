@@ -1,0 +1,1460 @@
+[
+  {
+    "id": "11bzlw7ZinwisBEKOBEn",
+    "vendorSite": "Robu",
+    "orderLink": "https://robu.in/product/emax-ecoii-2207-1900kv-brushless-motor/?gad_source=1&gad_campaignid=17416544847&gbraid=0AAAAADvLFWfEjErM1r88KYYwjeEMbZeWX&gclid=CjwKCAjwxb7RBhA5EiwAQ-AAdIUTwd1Xcjh4pt6j3mlGBMUrpCJwt8s6I74dv3lgU2ZAwkimStvPUBoCFpUQAvD_BwE",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "items": [
+      {
+        "name": "Emax ECOII-2207-1900KV Brushless Motor",
+        "type": "Capital",
+        "quantity": "16",
+        "estimatedAmount": "1894",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1781517989,
+      "_nanoseconds": 646000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1781517989,
+      "_nanoseconds": 866000000
+    }
+  },
+  {
+    "id": "1QyfUTzXA8prmFUtXgQs",
+    "vendorSite": "Zbotic",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "Waveshare SIM7600G-H M.2 4G HAT for Raspberry Pi, LTE CAT4 High Speed, 4G/3G/2G, GNSS, Global Band",
+        "type": "Capital",
+        "quantity": "5",
+        "estimatedAmount": "7325.44",
+        "notes": "https://zbotic.in/product/waveshare-sim7600g-h-m-2-4g-hat-for-raspberry-pi-lte-cat4-high-speed-4g-3g-2g-gnss-global-band/"
+      }
+    ],
+    "requestedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "requestedByEmail": "sargunjit591@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778497906,
+      "_nanoseconds": 229000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 36627.2,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "Credit Card",
+    "status": "approved",
+    "updatedAt": {
+      "_seconds": 1778501322,
+      "_nanoseconds": 74000000
+    }
+  },
+  {
+    "id": "2vIiYyVYP5XRVYW8P1hA",
+    "vendorSite": "Robu",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "velox v3120 700kv motor",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "5121",
+        "notes": "https://robu.in/product/t-motor-velox-v3120-fpv-drone-motors-700-kv?gad_campaignid=17416544847"
+      },
+      {
+        "name": "RPI Lora module",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "2280",
+        "notes": "https://robu.in/product/waveshare-sx1262-lora-hat-for-raspberry-pi-868mhz-frequency-band-for-europe-asia-africa?gad_campaignid=19974686076"
+      }
+    ],
+    "requestedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "requestedByEmail": "sargunjit591@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778156825,
+      "_nanoseconds": 785000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778156825,
+      "_nanoseconds": 879000000
+    }
+  },
+  {
+    "id": "5h0mbNlB4xswSpHMgND9",
+    "vendorSite": "Digikey",
+    "orderLink": "https://www.digikey.in/short/pnvb24r9",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "Battery management system for Dronastr",
+    "items": [
+      {
+        "name": "Resistor 10k Ohm",
+        "type": "Capital",
+        "quantity": "100",
+        "estimatedAmount": "1.62",
+        "notes": ""
+      },
+      {
+        "name": "BQ7693006DBTR",
+        "type": "Capital",
+        "quantity": "4",
+        "estimatedAmount": "475.25",
+        "notes": ""
+      },
+      {
+        "name": "XIAO ESP32S3",
+        "type": "Capital",
+        "quantity": "4",
+        "estimatedAmount": "697.86",
+        "notes": ""
+      },
+      {
+        "name": "TSSOP-30 TO DIP-30 SMT ADAPTER",
+        "type": "Capital",
+        "quantity": "4",
+        "estimatedAmount": "586.14",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "requestedByEmail": "sargunjit591@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778061254,
+      "_nanoseconds": 483000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778061254,
+      "_nanoseconds": 576000000
+    }
+  },
+  {
+    "id": "7s1R8MeXTjzP9sAmxCqX",
+    "vendorSite": "ThinkRobotics",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776422014,
+      "_nanoseconds": 759000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "",
+    "adminCategory": "DGT",
+    "finalAmount": 10000,
+    "adminRemarks": "",
+    "orderMadeBy": "",
+    "paymentType": "",
+    "inventoryDocId": "k8yyq3UkKOT8tjDAALOF",
+    "items": [
+      {
+        "quantity": "1",
+        "name": "Inertial Navigation System",
+        "estimatedAmount": "10000",
+        "notes": "https://thinkrobotics.com/products/imu-inertial-navigation-module-ros1-ros2?variant=48424711946557",
+        "type": "Capital",
+        "arrived": true
+      }
+    ],
+    "status": "completed",
+    "updatedAt": {
+      "_seconds": 1776760023,
+      "_nanoseconds": 718000000
+    }
+  },
+  {
+    "id": "81m97ei8NtgREHpOreCG",
+    "vendorSite": "anubisrc",
+    "orderLink": "https://anubisrc.com/product/dogcom-6s-2200mah-150c-22-2v-lipo-battery-xt60/?srsltid=AfmBOormqYFnGv5ToZeLBMuzb603wVbU3Zcn3tFvdu5CUKzyQ_IY_GRt",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "DOGCOM 6S 2200mAh 150C 22.2V LiPo Battery XT60",
+        "type": "Capital",
+        "quantity": "5",
+        "estimatedAmount": "6399",
+        "notes": "https://anubisrc.com/product/dogcom-6s-2200mah-150c-22-2v-lipo-battery-xt60/?srsltid=AfmBOormqYFnGv5ToZeLBMuzb603wVbU3Zcn3tFvdu5CUKzyQ_IY_GRt"
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778481819,
+      "_nanoseconds": 223000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778481819,
+      "_nanoseconds": 287000000
+    }
+  },
+  {
+    "id": "BI05aETgJHmC1FiioIn6",
+    "vendorSite": "Indian Robo Store ",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776242997,
+      "_nanoseconds": 203000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 9481,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "Credit Card",
+    "inventoryDocId": "HPn9lxhhQODij8D9conU",
+    "items": [
+      {
+        "notes": "https://indianrobostore.com/product/hglrc-m100-pro-gps-for-rc-fpv-racing-drone-quadcopter",
+        "name": "HGLRC M100 PRO GPS ",
+        "arrived": true,
+        "estimatedAmount": "2499",
+        "quantity": "1",
+        "type": "Capital"
+      },
+      {
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "6799",
+        "name": "RC Radiomaster m2",
+        "notes": "https://indianrobostore.com/product/radiomaster-pocket-radio-controller-m2-elrs-gray",
+        "arrived": true
+      }
+    ],
+    "status": "completed",
+    "updatedAt": {
+      "_seconds": 1776251719,
+      "_nanoseconds": 629000000
+    }
+  },
+  {
+    "id": "GWm7FWonlXmrWRvAihuz",
+    "vendorSite": "zerodrag",
+    "orderLink": "https://zerodrag.in/products/zerodrag-strix-h7-flight-controller-fully-solder-less-design-with-12-month-warranty-made-in-india",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "items": [
+      {
+        "name": "Zerodrag Strix H7 Flight Controller – Fully Solder-Less Design",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "7999",
+        "notes": ""
+      },
+      {
+        "name": "https://zerodrag.in/products/zerodrag-loc8-rtk-gps",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "25999",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1781520798,
+      "_nanoseconds": 941000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1781520799,
+      "_nanoseconds": 65000000
+    }
+  },
+  {
+    "id": "LgEVoH6DgYyOvVd2p5He",
+    "vendorSite": "Amazon",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "requestedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "requestedByEmail": "sargunjit591@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1777983540,
+      "_nanoseconds": 325000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 253.11,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "Credit Card",
+    "status": "approved",
+    "inventoryDocId": "8KRL9ISdRCYDHVlRkIPR",
+    "items": [
+      {
+        "estimatedAmount": "66",
+        "name": "USB A Female (10)",
+        "quantity": "1",
+        "notes": "https://www.amazon.in/dp/B08LGP2DJS?ref=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ&ref_=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ&social_share=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ",
+        "type": "Capital",
+        "arrived": true
+      },
+      {
+        "type": "Capital",
+        "notes": "https://www.amazon.in/CRAFT-WORLD-Solder-Connector-Degree/dp/B0DCJ7PR9R/ref=sr_1_8?crid=2CW9EMRTEQ97P&dib=eyJ2IjoiMSJ9.BWHWjKf40PoIapzbCNNoiakN8BaBka_f7SaL8uAKQgiDwQdoLTU7FUzDLWbwDRjYM_rRObRzBQ_B0h1-3CT9kexfxx-N_sSo2nVzupj4u_ap5tB7U96GmR45uoGUGv-tnJbePHzlbivx1QEzzBapzKlv3VT9LhnCdvrz9J6OM22BKqK_7BSFJrNZ9IpHU_6HWBnrpDvY8Z-6b9VzfexAElrCW2ZQTKKyyZfOLCy5AXOfNJtxPxnsjTAAMTmQDY7QOnYlAleUyAUERqr8-V5DOJPk5U5XvHWZ4jRocFiMeOo.2OqJjsMXTUXdauW-O0Tf0sQc72sirHM7stx7PmzEpnQ&dib_tag=se&keywords=Electronic+Spices+Electronicspices+Usb+Connector+A+Type+male+Straight&nsdOptOutParam=true&qid=1777535543&s=industrial&sprefix=electronic+spices+electronicspices+usb+connector+a+type+male+straight+%2Caps%2C417&sr=1-8",
+        "name": "USB A Male (10)",
+        "quantity": "1",
+        "estimatedAmount": "187.11"
+      }
+    ],
+    "updatedAt": {
+      "_seconds": 1778064380,
+      "_nanoseconds": 820000000
+    }
+  },
+  {
+    "id": "MGvvOpLVdSqh8HRHvQeH",
+    "vendorSite": "ROBU",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "RPI 4 AND RPI 5 FOR DRONASTRA , ORDER FOR SARGUN",
+    "items": [
+      {
+        "name": "Rpi 5 4gb ",
+        "type": "Capital",
+        "quantity": "3",
+        "estimatedAmount": "12331",
+        "notes": "https://robu.in/product/raspberry-pi-5-model-4gb/?gad_source=1&gad_campaignid=19974686076&gbraid=0AAAAADvLFWe2u3As0GIraoCGECOdWtI9u&gclid=Cj0KCQjwiJvQBhCYARIsAMjts3IGfNdT9L7DGnGVf5U-x0nnIlru8Uy0-5T4l5oWPTuJWASOHuWgfWIaAjyUEALw_wcB"
+      },
+      {
+        "name": "RPI 4 4GB",
+        "type": "Capital",
+        "quantity": "3",
+        "estimatedAmount": "11299",
+        "notes": "https://robu.in/product/raspberry-pi-4-model-b-with-4-gb-ram/?gad_source=1&gad_campaignid=19974686076&gbraid=0AAAAADvLFWe2u3As0GIraoCGECOdWtI9u&gclid=Cj0KCQjwiJvQBhCYARIsAMjts3I5I-z-olC9dXmvlikKS_kfLi03NcDoMirA68RQEiMx3-ehqsyRhBAaAo7tEALw_wcB"
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778843164,
+      "_nanoseconds": 9000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778843164,
+      "_nanoseconds": 108000000
+    }
+  },
+  {
+    "id": "QWCoIIOa2tM3JqPayFrQ",
+    "vendorSite": "Indian robo store ",
+    "orderLink": "",
+    "projectName": "Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "VLX Lidar sensore short range",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "1600.01",
+        "notes": "https://indianrobostore.com/product/holybro-st-vl53l1x-lidar-sensor-for-accurate-distance-measurement"
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1779435551,
+      "_nanoseconds": 888000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1779435551,
+      "_nanoseconds": 944000000
+    }
+  },
+  {
+    "id": "QzJ93rOs8LzmBsXTVy8O",
+    "vendorSite": "onlyscrews",
+    "orderLink": "https://onlyscrews.in/products/hex-allen-button-head-m3-x-6-screw-pack-of-20",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "items": [
+      {
+        "name": "https://onlyscrews.in/products/hex-allen-button-head-m3-x-6-screw-pack-of-20",
+        "type": "Capital",
+        "quantity": "250",
+        "estimatedAmount": "1.80",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/hex-allen-button-head-m3-x-8-screw-pack-of-20",
+        "type": "Capital",
+        "quantity": "250",
+        "estimatedAmount": "2",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/m3-x-6mm-hex-allen-button-head-hight-tensile10-9-black-oxide-screw-dia-3mm-length-6mm",
+        "type": "Capital",
+        "quantity": "100",
+        "estimatedAmount": "2.2",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/m3-x-4mm-3d-printing-brass-threaded-inserts-dia-3mm-length-4mm",
+        "type": "Capital",
+        "quantity": "200",
+        "estimatedAmount": "4.4",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/loctite%C2%AE-270-high-strength-thread-locking-adhesive-50-ml-1",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "900",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/m3-washer-ss304",
+        "type": "Capital",
+        "quantity": "100",
+        "estimatedAmount": "0.80",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/m4-washer-ss304",
+        "type": "Capital",
+        "quantity": "100",
+        "estimatedAmount": "1",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/m3-fiber-washer-id-3-2mm-od-8mm-t-0-7mm",
+        "type": "Capital",
+        "quantity": "100",
+        "estimatedAmount": "0.60",
+        "notes": ""
+      },
+      {
+        "name": "https://onlyscrews.in/products/m3-nylon-washer-id-3mm-od-6mm-t-1-3mm",
+        "type": "Capital",
+        "quantity": "100",
+        "estimatedAmount": "1",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1781520627,
+      "_nanoseconds": 590000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1781520627,
+      "_nanoseconds": 715000000
+    }
+  },
+  {
+    "id": "R9UV45pCUdTgv32veF53",
+    "vendorSite": "Indian Robo Store",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776423208,
+      "_nanoseconds": 424000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "",
+    "adminCategory": "DGT",
+    "finalAmount": 38788,
+    "adminRemarks": "",
+    "orderMadeBy": "",
+    "paymentType": "",
+    "inventoryDocId": "j4fWVQBryU1sL0xAgcPH",
+    "items": [
+      {
+        "arrived": true,
+        "quantity": "4",
+        "name": "Radiomaster Pocket M2 RC",
+        "notes": "https://indianrobostore.com/product/radiomaster-pocket-radio-controller-m2-elrs-charcoal",
+        "estimatedAmount": "6799",
+        "type": "Capital"
+      },
+      {
+        "quantity": "4",
+        "arrived": true,
+        "name": "M100 Pro Gps ",
+        "notes": "https://indianrobostore.com/product/hglrc-m100-pro-gps-for-rc-fpv-racing-drone-quadcopter",
+        "estimatedAmount": "2499",
+        "type": "Capital"
+      },
+      {
+        "arrived": true,
+        "quantity": "4",
+        "name": "7A Buck Converter",
+        "estimatedAmount": "399",
+        "notes": "https://indianrobostore.com/product/ubec-7a-receiver-external-buck-dc-voltage-regulator-module-for-drones",
+        "type": "Capital"
+      },
+      {
+        "name": "18650 battery",
+        "type": "Capital",
+        "notes": "",
+        "estimatedAmount": "325",
+        "quantity": "5",
+        "arrived": true
+      }
+    ],
+    "status": "completed",
+    "updatedAt": {
+      "_seconds": 1776760012,
+      "_nanoseconds": 986000000
+    }
+  },
+  {
+    "id": "Tai88l8qhURBsnJblxkE",
+    "vendorSite": "Indian robo store ",
+    "orderLink": "",
+    "projectName": "Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "Carbon fiber 30mm , 1.5mm thickness",
+        "type": "Consumable / Fab / Test",
+        "quantity": "2",
+        "estimatedAmount": "3199",
+        "notes": "Sorry for the confusion  https://indianrobostore.com/product/30-x-27-x-1000-mm-carbon-fiber-tube-thickness-15mm 1.5mm thickness not 1mm thickness  please generate the invoice for this  quantity - 2"
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1779435489,
+      "_nanoseconds": 865000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1779435489,
+      "_nanoseconds": 949000000
+    }
+  },
+  {
+    "id": "Uf79MKH7y3OvpuUYTwsY",
+    "vendorSite": "Robu",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "Waveshare SIM7600G-H 4G HAT For Raspberry Pi, LTE Cat-4 4G / 3G / 2G Support",
+        "type": "Capital",
+        "quantity": "4",
+        "estimatedAmount": "6629",
+        "notes": "https://robu.in/product/waveshare-sim7600g-h-4g-hat-for-raspberry-pi-lte-cat-4-4g-3g-2g-support"
+      },
+      {
+        "name": "Waveshare SIM7600G-H M.2 4G HAT for Raspberry Pi, LTE CAT4 High Speed, 4G/3G/2G, GNSS, Global Band",
+        "type": "Capital",
+        "quantity": "2",
+        "estimatedAmount": "7399",
+        "notes": "https://robu.in/product/waveshare-sim7600g-h-m-2-4g-hat-for-raspberry-pi-lte-cat4-high-speed-4g-3g-2g-gnss-global-band"
+      }
+    ],
+    "requestedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "requestedByEmail": "sargunjit591@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778494915,
+      "_nanoseconds": 935000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "",
+    "adminCategory": "DGT",
+    "finalAmount": 41314,
+    "adminRemarks": "",
+    "orderMadeBy": "",
+    "paymentType": "",
+    "status": "rejected",
+    "updatedAt": {
+      "_seconds": 1778497872,
+      "_nanoseconds": 666000000
+    }
+  },
+  {
+    "id": "X1AXy6iQ7iYdiQRwciSo",
+    "vendorSite": "Indian Robo Store ",
+    "orderLink": "https://indianrobostore.com/?srsltid=AfmBOopsBoOXxEDZJeVGfOGWeKXNYvLtQQtUZoi0UGWdOWwWeP3tFEhK",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "Mark4 10inch V2 427mm carbon Fiber for FPV Racing Drone Quadcopter",
+        "type": "Capital",
+        "quantity": "2",
+        "estimatedAmount": "2999",
+        "notes": "https://indianrobostore.com/product/mark4-10inch-v2-427mm-carbon-fiber-for-fpv-racing-drone-quadcopter-freestyle-frame-kit"
+      },
+      {
+        "name": "HQ MacroQuad Prop 10 X 4.5 X 3 (1CW + 1CCW) Black-Glass Fiber Reinforced Nylon FPV Propeller",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "1259",
+        "notes": "https://indianrobostore.com/product/hq-macroquad-prop-10-x-45-x-3-1cw-1ccw-black-glass-fiber-reinforced-nylon-fpv-propeller"
+      },
+      {
+        "name": "Radiomaster Pocket Radio Controller (M2)–ELRS-White",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "7799",
+        "notes": "https://indianrobostore.com/product/radiomaster-pocket-radio-controller-m2-elrs-white"
+      },
+      {
+        "name": "UBEC-15A Receiver External buck DC Voltage Regulator Module For Drones",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "789",
+        "notes": "https://indianrobostore.com/product/ubec-15a-receiver-external-buck-dc-voltage-regulator-module-for-drones"
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778479495,
+      "_nanoseconds": 555000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778479495,
+      "_nanoseconds": 738000000
+    }
+  },
+  {
+    "id": "YpyZhkA6YSvlPpSWaEx5",
+    "vendorSite": "zerodrag",
+    "orderLink": "https://zerodrag.in/",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "Zerodrag Strix H7 Flight Controller",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "7599.05",
+        "notes": "https://zerodrag.in/products/zerodrag-strix-h7-flight-controller-fully-solder-less-design-with-12-month-warranty-made-in-india"
+      },
+      {
+        "name": "Zerodrag Nexus 1 Express LRS 2.4GHz Receiver",
+        "type": "Capital",
+        "quantity": "6",
+        "estimatedAmount": "1549.00",
+        "notes": "https://zerodrag.in/products/express-lrs-receiver-2-4ghz-made-in-india"
+      },
+      {
+        "name": "Zerodrag LOC8-M10 GNSS System",
+        "type": "Capital",
+        "quantity": "2",
+        "estimatedAmount": "2099",
+        "notes": "https://zerodrag.in/products/zerodrag-loc8-m10-gnss-system"
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778480916,
+      "_nanoseconds": 256000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778480916,
+      "_nanoseconds": 307000000
+    }
+  },
+  {
+    "id": "ZNvULSCDskW8u3CYO6Cr",
+    "vendorSite": "Amazon ",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "FOR SUYANTR",
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776167547,
+      "_nanoseconds": 29000000
+    },
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 5942,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "Credit Card",
+    "adminNotes": "Order Placed on 14 April 2026",
+    "inventoryDocId": "O61OwmTGVzWFKqdefonz",
+    "items": [
+      {
+        "type": "Capital",
+        "estimatedAmount": "349",
+        "notes": "https://www.amazon.in/gp/product/B079R3VMRY/ref=ox_sc_act_title_2?smid=AJ6SIZC8YQDZX&psc=1",
+        "name": "CP2102",
+        "arrived": true,
+        "quantity": "5"
+      },
+      {
+        "name": "Display Unit",
+        "estimatedAmount": "1399",
+        "notes": "https://www.amazon.in/SmartElex-2-4-inch-Resistive-Interface-Controller/dp/B0GFCWN4V7/ref=sr_1_17?crid=WMHYVCY2QJ46&dib=eyJ2IjoiMSJ9.1oYlqHpZbByX3oRtek-S0wtCh1fUESLqzMgwz3qriC6LAcLykv0Y2Q3ylN9I66dnGb5J6opUlcQ3HSXcGMgfhEJsGcA0IptRVbo4nmD_IaVrqs7VUik7CK9QjhtTbozDvWw83OBdxWLQYX14qjQWew1WkpL2bQ6nds2QkLH3Usw7KijxgpM-e1qYVVHBgPwNcKfBycdqj5cYW33nmafZrd25bGWhb9qTJaRIBnNokIvqr0AgfCwO5ZySSaxuNCS4SukQyoYnYLmfABPlXgkMWJ5LhHikb8Ves263ByXpNA0.jqyIs9nSea_7NSXUr8dX2TsTsOF8Oomhru9L9jFxgnk&dib_tag=se&keywords=2.8+inch+SPI+Screen+Module+TFT+Interface+SMART+ELEX&nsdOptOutParam=true&qid=1776168483&s=industrial&sprefix=2.8+inch+spi+screen+module+tft+interface+smart+el%2Cindustrial%2C383&sr=1-17",
+        "type": "Capital",
+        "quantity": "3",
+        "arrived": true
+      }
+    ],
+    "status": "completed",
+    "updatedAt": {
+      "_seconds": 1776760034,
+      "_nanoseconds": 453000000
+    }
+  },
+  {
+    "id": "aLN16b11VnBJqidK5M85",
+    "vendorSite": "Amazon",
+    "orderLink": "https://www.amazon.in/dp/B08LGP2DJS?ref=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ&ref_=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ&social_share=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "low",
+    "notes": "",
+    "items": [
+      {
+        "name": "Electronic Spices Electronicspices Usb Connector A Type Female Straight -Pack Of 10",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "139",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778218933,
+      "_nanoseconds": 969000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778218934,
+      "_nanoseconds": 55000000
+    }
+  },
+  {
+    "id": "dbnyQBsvAob8iQHxfXV5",
+    "vendorSite": "Zerodrag",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776245167,
+      "_nanoseconds": 360000000
+    },
+    "adminNotes": "",
+    "gstAmount": "237.68",
+    "orderType": "",
+    "adminCategory": "DGT",
+    "finalAmount": 4995,
+    "adminRemarks": "",
+    "orderMadeBy": "",
+    "paymentType": "",
+    "inventoryDocId": "VWkrq5qDZ5vYsySD9Dzs",
+    "items": [
+      {
+        "name": "Zerodrag Nexus 1 Express LRS 2.4GHz Receiver",
+        "type": "Capital",
+        "estimatedAmount": "1549",
+        "notes": "https://zerodrag.in/products/express-lrs-receiver-2-4ghz-made-in-india?srsltid=AfmBOooPsXkWIY56Lq4GuFa68YQv5sKdajTLGoPrPzuhu3czpUpxlw2_",
+        "quantity": "5",
+        "arrived": true
+      }
+    ],
+    "status": "completed",
+    "updatedAt": {
+      "_seconds": 1776760028,
+      "_nanoseconds": 596000000
+    }
+  },
+  {
+    "id": "dfyzN2nQVPHDFH1dZAbb",
+    "vendorSite": "Robu.in",
+    "orderLink": "https://robu.in/product/hqprop-thin-electric-prop-9x5-2ccw-propeller?gbraid=0AAAAADvLFWeOaqZfMHIWtreMDyFzM0H9o&gad_source=1&gad_campaignid=17419548928&gclid=Cj0KCQjwkrzPBhCqARIsAJN460mlUksNF_mgIipHRYeeP0KETW98vav35ZTon_AxUMqnsJIXDkD6dn4aAgUeEALw_wcB",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "items": [
+      {
+        "name": "HQProp Thin Electric Prop 9x5 (2CCW) Propeller",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "284",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1777281479,
+      "_nanoseconds": 17000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 284,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "",
+    "status": "approved",
+    "updatedAt": {
+      "_seconds": 1777288958,
+      "_nanoseconds": 980000000
+    }
+  },
+  {
+    "id": "fp2BJbcBcNVi3UyPQRnx",
+    "vendorSite": "Tatonis ",
+    "orderLink": "https://www.tanotis.com/products/sparkfun-lora-fiberglass-antenna-type-n-5-8dbi-863-870mhz?gad_campaignid=21644100636",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "LoRa Fiberglass Antenna Type N - 5.8dBi (863-870MHz)",
+        "type": "Capital",
+        "quantity": "4",
+        "estimatedAmount": "5245",
+        "notes": "https://www.tanotis.com/products/sparkfun-lora-fiberglass-antenna-type-n-5-8dbi-863-870mhz?gad_campaignid=21644100636"
+      }
+    ],
+    "requestedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "requestedByEmail": "sargunjit591@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778156887,
+      "_nanoseconds": 288000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778156887,
+      "_nanoseconds": 380000000
+    }
+  },
+  {
+    "id": "g6ha79gCReobq2zjKALl",
+    "vendorSite": "UAVGarage",
+    "orderLink": "https://uavgarage.com/shop/here3-gps-receiver-with-istand/?gad_source=1&gad_campaignid=23458947079&gbraid=0AAAAA94SrdlqEnGpyP16GKtww1Gzfx4mo&gclid=Cj0KCQjwy_fOBhC6ARIsAHKFB7_CqW4F2wR5gwQNWZK7RqFHMgO9J0MA1QvVOgoTZwr0fh9OOrDzmSAaAm6mEALw_wcB",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "Here3+ CAN GPS",
+        "type": "Consumable / Fab / Test",
+        "quantity": "2",
+        "estimatedAmount": "37000",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776229859,
+      "_nanoseconds": 807000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "",
+    "adminCategory": "DGT",
+    "finalAmount": 74000,
+    "adminRemarks": "",
+    "orderMadeBy": "",
+    "paymentType": "",
+    "status": "rejected",
+    "updatedAt": {
+      "_seconds": 1776245341,
+      "_nanoseconds": 932000000
+    }
+  },
+  {
+    "id": "g7WEWIhi9y612y1GAJOd",
+    "vendorSite": "Indian Robo Store",
+    "orderLink": "https://indianrobostore.com/product/hqprop-freestyle-dp5x43x3v2s-grey-2cw2ccw-poly-carbonate-for-fpv-drone",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "HQProp Freestyle DP5X4.3X3V2S Grey (2CW+2CCW) Poly Carbonate for FPV Drone",
+        "type": "Capital",
+        "quantity": "5",
+        "estimatedAmount": "290",
+        "notes": "https://indianrobostore.com/product/hqprop-freestyle-dp5x43x3v2s-grey-2cw2ccw-poly-carbonate-for-fpv-drone"
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778481662,
+      "_nanoseconds": 497000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "",
+    "adminCategory": "DGT",
+    "finalAmount": 1450,
+    "adminRemarks": "",
+    "orderMadeBy": "",
+    "paymentType": "",
+    "status": "rejected",
+    "updatedAt": {
+      "_seconds": 1778482242,
+      "_nanoseconds": 362000000
+    }
+  },
+  {
+    "id": "ggCYejjFC1roJoXr1e6m",
+    "vendorSite": "uavmarketplace.in",
+    "orderLink": "https://www.uavmarketplace.in/products/hq-prop-thin-electric-fixed-wing-propeller/895789000000341122",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1777281597,
+      "_nanoseconds": 639000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 567,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "",
+    "inventoryDocId": "uYlaEahFR16kaZImOGYX",
+    "items": [
+      {
+        "notes": "",
+        "type": "Capital",
+        "estimatedAmount": "189",
+        "quantity": "3",
+        "name": "HQ PROP Thin Electric Fixed Wing Propeller CW",
+        "arrived": true
+      }
+    ],
+    "status": "completed",
+    "updatedAt": {
+      "_seconds": 1777626419,
+      "_nanoseconds": 82000000
+    }
+  },
+  {
+    "id": "gzeefLEdBfcZUBYNSrqc",
+    "vendorSite": "Indian Robo store",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "ELRS RECIVER ",
+    "items": [
+      {
+        "name": "ELRS RECIVER SPEEDYBEE",
+        "type": "Capital",
+        "quantity": "5",
+        "estimatedAmount": "1449",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778834781,
+      "_nanoseconds": 505000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778834781,
+      "_nanoseconds": 556000000
+    }
+  },
+  {
+    "id": "h0DZALtPQR1WAx9xjMsN",
+    "vendorSite": "anubisrc.com",
+    "orderLink": "https://anubisrc.com/product/dogcom-6s-2200mah-150c-22-2v-lipo-battery-xt60/",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "items": [
+      {
+        "name": "DOGCOM 6S 2200mAh 150C 22.2V LiPo Battery XT60",
+        "type": "Capital",
+        "quantity": "3",
+        "estimatedAmount": "6399",
+        "notes": "https://anubisrc.com/product/dogcom-6s-2200mah-150c-22-2v-lipo-battery-xt60/"
+      }
+    ],
+    "requestedBy": "59ieeWF72cbzscjiEfvdJw3yuLk2",
+    "requestedByEmail": "piyush.dussat@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1781522080,
+      "_nanoseconds": 865000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1781522080,
+      "_nanoseconds": 992000000
+    }
+  },
+  {
+    "id": "i1iAa39WBGfPDFsOisAE",
+    "vendorSite": "UAVGARAGE",
+    "orderLink": "https://uavgarage.com/shop/reflex-drive-power-distribution-board-250a/?srsltid=AfmBOoojpoXPtQb4UbnQtVWqR3yUHpWjSMDa-RVfbf7EyFXFGxlB1rlv",
+    "projectName": "Patang",
+    "category": "Grant",
+    "priority": "critical",
+    "notes": "",
+    "items": [
+      {
+        "name": "PDB",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "5662.82",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "WtfnSIQfHDPO6ZLx47SM3VtbGqP2",
+    "requestedByEmail": "rushikeshugale2501@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1776246694,
+      "_nanoseconds": 475000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "Grant",
+    "finalAmount": 5662.82,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "paymentType": "Credit Card",
+    "status": "approved",
+    "updatedAt": {
+      "_seconds": 1778156936,
+      "_nanoseconds": 991000000
+    }
+  },
+  {
+    "id": "mkUKjECOPemYN7oW9umQ",
+    "vendorSite": "Indian robo store",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "ESC AND FC",
+    "items": [
+      {
+        "name": "ESC 80A",
+        "type": "Capital",
+        "quantity": "4",
+        "estimatedAmount": "12999",
+        "notes": "https://indianrobostore.com/product/irs-80a-4-in-1-esc-for-fpv-drone Quantity - 4  please generate an invoice"
+      },
+      {
+        "name": "FC",
+        "type": "Capital",
+        "quantity": "3",
+        "estimatedAmount": "7999",
+        "notes": "https://indianrobostore.com/product/tbs-lucid-h7-flight-controller-for-fpv-racing-drone Quantity - 3"
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778834732,
+      "_nanoseconds": 833000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778834732,
+      "_nanoseconds": 881000000
+    }
+  },
+  {
+    "id": "qlDDHwejxqVev3i2KIHW",
+    "vendorSite": "Amazon ",
+    "orderLink": "https://www.amazon.in/dp/B0B54QWF7M?ref=cm_sw_r_cso_wa_mwn_dp_NSG8XVGGRJXTQE65K07K_1&ref_=cm_sw_r_cso_wa_mwn_dp_NSG8XVGGRJXTQE65K07K_1&social_share=cm_sw_r_cso_wa_mwn_dp_NSG8XVGGRJXTQE65K07K_1&th=1",
+    "projectName": "Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "Laptop battery for manoj ",
+    "items": [
+      {
+        "name": "WISTAR HS04 Laptop Battery ",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "1099.01",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778651822,
+      "_nanoseconds": 902000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778651822,
+      "_nanoseconds": 938000000
+    }
+  },
+  {
+    "id": "teLwzkJWqDKZtkIDjPWf",
+    "vendorSite": "ROBOKITS",
+    "orderLink": "",
+    "projectName": "Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "Backup battery for the main patang",
+    "items": [
+      {
+        "name": "GenX 22.2V 6S 5200mAh 40C / 80C Premium Lipo Lithium Polymer Battery",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "4807",
+        "notes": "https://robokits.co.in/batteries-chargers/drone-batteries/genx-power-premium-lipo-battery/genxpower-22.2v-lipo-batteries/genx-22.2v-6s-5200mah-40c-80c-premium-lipo-lithium-polymer-battery"
+      }
+    ],
+    "requestedBy": "h3k2uH1CdGV9HpLxZucwhuQgo4E3",
+    "requestedByEmail": "prakharganeriwal@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1779106893,
+      "_nanoseconds": 941000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1779106894,
+      "_nanoseconds": 141000000
+    }
+  },
+  {
+    "id": "ujSQYi2EnHbzrEBHaUhk",
+    "vendorSite": "Evelta",
+    "orderLink": "https://evelta.com/ov9281-110-1mp-mono-camera-for-raspberry-pi/?sku=061-21653&utm_source=google&utm_campaign=20308067004&utm_medium=cpc&utm_content=&utm_term=&gad_source=1&gad_campaignid=20317564702&gbraid=0AAAAADwtsXkzdqcr4EviahxW_hPIyJuvm&gclid=Cj0KCQjw_IXQBhCkARIsADqELbK0WXR5tj56Jr6eFh6td-msfzijEsQprf_4UG7sEEMAr0aShSTU4Z8aAh0eEALw_wcB",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "critical",
+    "notes": "Dronastr Camera",
+    "items": [
+      {
+        "name": "OV9281-110 1MP Mono Camera for Raspberry Pi, Global Shutter",
+        "type": "Capital",
+        "quantity": "3",
+        "estimatedAmount": "3000",
+        "notes": ""
+      }
+    ],
+    "requestedBy": "ppqIb0ncqVTrdNabn3aOlPqJJHw1",
+    "requestedByEmail": "rushisapkal1304@gmail.com",
+    "adminCategory": null,
+    "paymentType": null,
+    "orderType": null,
+    "orderMadeBy": null,
+    "finalAmount": null,
+    "adminRemarks": null,
+    "adminNotes": null,
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1778566777,
+      "_nanoseconds": 735000000
+    },
+    "status": "pending",
+    "updatedAt": {
+      "_seconds": 1778566777,
+      "_nanoseconds": 838000000
+    }
+  },
+  {
+    "id": "vXaFFwDXjMb4k5cUyYUK",
+    "vendorSite": "Robo",
+    "orderLink": "",
+    "projectName": "Non-Patang",
+    "category": "DGT",
+    "priority": "high",
+    "notes": "",
+    "requestedBy": "hGlnZqXpjQabFn1IEH7V9jVFsmI2",
+    "requestedByEmail": "harshraj95235@gmail.com",
+    "invoiceNumber": null,
+    "createdAt": {
+      "_seconds": 1777972312,
+      "_nanoseconds": 565000000
+    },
+    "adminNotes": "",
+    "gstAmount": "",
+    "orderType": "Domestic",
+    "adminCategory": "DGT",
+    "finalAmount": 31582.72,
+    "adminRemarks": "",
+    "orderMadeBy": "Commander Mukesh Saini",
+    "items": [
+      {
+        "name": " Raspberry Pi 5",
+        "type": "Capital",
+        "quantity": "1",
+        "estimatedAmount": "11961.07",
+        "notes": "https://robu.in/product/raspberry-pi-5-model-4gb?gbraid=0AAAAADvLFWdxeRrTecjC2uzlCWYUp1kRe&gclid=CjwKCAjwqubPBhBOEiwAzgZX2uKrL6HkQksDXmTe_S1HQOz5VZQ1rgmvlLN4pSRe1pDzLYK4xH1sNxoCDdUQAvD_BwE&gad_source=1&gad_campaignid=19974686076"
+      },
+      {
+        "type": "Capital",
+        "name": "Official Raspberry Pi AI HAT+ 2",
+        "quantity": "1",
+        "estimatedAmount": "19572.66",
+        "notes": "https://robu.in/product/official-raspberry-pi-ai-hat-2?gclid=CjwKCAjwqubPBhBOEiwAzgZX2uMuTmpPziqJ3qeqokZlNEDEZMJPOAx80iQ5R6rJLN8QiiqOdSB2PBoCw0oQAvD_BwE&gbraid=0AAAAADvLFWdxeRrTecjC2uzlCWYUp1kRe&gad_campaignid=19974686076&gad_source=1"
+      },
+      {
+        "name": "Transportation Air",
+        "type": "",
+        "quantity": "1",
+        "estimatedAmount": "48.99",
+        "notes": "",
+        "arrived": false
+      }
+    ],
+    "paymentType": "Credit Card",
+    "status": "approved",
+    "updatedAt": {
+      "_seconds": 1778063159,
+      "_nanoseconds": 892000000
+    }
+  }
+]

@@ -13,6 +13,7 @@ import OrderRequests from "./pages/OrderRequests";
 
 import AdminLayout from "./admin/AdminLayout";
 import ReviewOrders from "./admin/ReviewOrders";
+import VendorPipeline from "./admin/VendorPipeline";
 import ReviewFinances from "./admin/ReviewFinances";
 import OrderStatus from "./admin/OrderStatus";
 import UserManagement from "./admin/UserManagement";
@@ -52,6 +53,7 @@ export default function App() {
             <Route index element={<Navigate to="review-orders" replace />} />
             {/* Admin-specific pages */}
             <Route path="review-orders"   element={<ReviewOrders />} />
+            <Route path="vendor-pipeline" element={<VendorPipeline />} />
             <Route path="order-status"    element={<OrderStatus />} />
             <Route path="review-finances" element={<ReviewFinances />} />
             <Route path="user-management" element={<UserManagement />} />

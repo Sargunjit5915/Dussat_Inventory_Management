@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getAllOrderRequests, updateInvoiceNumber } from "../firebase/firestoreService";
-import { updateDoc, doc, addDoc, collection, serverTimestamp, getDoc } from "firebase/firestore";
+import {
+  getAllOrderRequests, updateInvoiceNumber,
+  markItemArrived, markOrderComplete, normalizeStatus,
+} from "../firebase/firestoreService";
+import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
+import OrderStageTimeline from "../components/OrderStageTimeline";
 
 export default function OrderStatus() {
   const { user } = useAuth();
@@ -22,7 +26,7 @@ export default function OrderStatus() {
     setLoading(true);
     try {
       const all = await getAllOrderRequests();
-      setOrders(all.filter((o) => o.status === "approved" || o.status === "completed"));
+      setOrders(all.filter((o) => normalizeStatus(o.status) === "order_placed" || normalizeStatus(o.status) === "completed"));
     } finally { setLoading(false); }
   }
 
@@ -33,80 +37,30 @@ export default function OrderStatus() {
     const key = `${order.id}_${itemIdx}`;
     setSaving((p) => ({ ...p, [key]: true }));
     try {
-      const item = order.items[itemIdx];
-      const newItem = {
-        name:            item.name,
-        quantity:        parseInt(item.quantity) || 1,
-        storageLocation: item.storageLocation || "Pending assignment",
-        notes:           item.notes || "",
-        type:            item.type || "Capital",
-      };
+      await markItemArrived(order.id, itemIdx, order.items[itemIdx], user.uid);
 
-      if (order.inventoryDocId) {
-        // PV doc already exists — append this item to its items[] array
-        const invSnap = await getDoc(doc(db, "inventory", order.inventoryDocId));
-        if (invSnap.exists()) {
-          const existingItems = invSnap.data().items || [];
-          const existingAmount = invSnap.data().amount || 0;
-          const addAmount = item.estimatedAmount ? parseFloat(item.estimatedAmount) : 0;
-          await updateDoc(doc(db, "inventory", order.inventoryDocId), {
-            items:       [...existingItems, newItem],
-            amount:      existingAmount + addAmount,
-            totalAmount: existingAmount + addAmount,
-            updatedAt:   serverTimestamp(),
-          });
-        }
-      } else {
-        // First item arriving — create the PV document for this order
-        const invRef = await addDoc(collection(db, "inventory"), {
-          pvNumber:         order.pvNumber || "—",
-          date:             new Date().toISOString().split("T")[0],
-          description:      order.vendorSite || "Order",
-          descriptionLower: (order.vendorSite || "order").toLowerCase(),
-          type:             item.type || "Capital",
-          category:         order.adminCategory || order.category || null,
-          projectName:      order.projectName   || null,
-          amount:           item.estimatedAmount ? parseFloat(item.estimatedAmount) : null,
-          gstAmount:        order.gstAmount      || null,
-          otherAmount:      null,
-          totalAmount:      item.estimatedAmount ? parseFloat(item.estimatedAmount) : null,
-          payee:            order.orderMadeBy    || null,
-          sourceOrderId:    order.id,
-          items:            [newItem],
-          status:           "active",
-          faultyCategory:   null,
-          addedBy:          user.uid,
-          createdAt:        serverTimestamp(),
-          updatedAt:        serverTimestamp(),
-        });
-        // Store the inventory doc ID back on the order so future items append to it
-        await updateDoc(doc(db, "orderRequests", order.id), {
-          inventoryDocId: invRef.id,
-          updatedAt:      serverTimestamp(),
-        });
-        setOrders((prev) => prev.map((o) =>
-          o.id === order.id ? { ...o, inventoryDocId: invRef.id } : o
-        ));
+      const orderSnap = await getDoc(doc(db, "orderRequests", order.id));
+      if (orderSnap.exists()) {
+        const fresh = { id: order.id, ...orderSnap.data() };
+        setOrders((prev) => prev.map((o) => o.id === order.id ? fresh : o));
       }
 
-      // Mark item as arrived in order doc
-      const orderSnap = await getDoc(doc(db, "orderRequests", order.id));
-      if (!orderSnap.exists()) return;
-      const items = [...(orderSnap.data().items || [])];
-      items[itemIdx] = { ...items[itemIdx], arrived: true };
-      const allArrived = items.every((i) => i.arrived);
-      await updateDoc(doc(db, "orderRequests", order.id), {
-        items,
-        ...(allArrived ? { status: "completed" } : {}),
-        updatedAt: serverTimestamp(),
-      });
-
       setMsg((p) => ({ ...p, [key]: "success" }));
-      setOrders((prev) => prev.map((o) => {
-        if (o.id !== order.id) return o;
-        const updItems = o.items.map((it, i) => i === itemIdx ? { ...it, arrived: true } : it);
-        return { ...o, items: updItems, status: updItems.every(it => it.arrived) ? "completed" : o.status };
-      }));
+      setTimeout(() => setMsg((p) => ({ ...p, [key]: null })), 2000);
+    } catch (err) {
+      console.error(err);
+      setMsg((p) => ({ ...p, [key]: "error" }));
+    } finally { setSaving((p) => ({ ...p, [key]: false })); }
+  };
+
+  // Explicit final action once every item has arrived — moves order into stock/completed
+  const handleMarkComplete = async (orderId) => {
+    const key = `complete_${orderId}`;
+    setSaving((p) => ({ ...p, [key]: true }));
+    try {
+      await markOrderComplete(orderId);
+      setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, status: "completed" } : o));
+      setMsg((p) => ({ ...p, [key]: "success" }));
       setTimeout(() => setMsg((p) => ({ ...p, [key]: null })), 2000);
     } catch (err) {
       console.error(err);
@@ -179,6 +133,7 @@ export default function OrderStatus() {
                     <span className={`badge ${isComplete ? "badge--active" : "badge--warning"}`}>
                       {isComplete ? "All Arrived" : `${arrivedCount}/${totalCount} arrived`}
                     </span>
+                    <OrderStageTimeline status={order.status} variant="badge" />
                   </div>
                   <div style={{ display:"flex", alignItems:"center", gap:"0.75rem" }}>
                     {order.finalAmount && (
@@ -293,6 +248,17 @@ export default function OrderStatus() {
                       {order.gstAmount    && <div className="summary-item"><span>GST Amount</span><strong>₹{Number(order.gstAmount).toLocaleString("en-IN")}</strong></div>}
                       {order.adminRemarks && <div className="summary-item summary-item--full"><span>Remarks</span><strong>{order.adminRemarks}</strong></div>}
                     </div>
+
+                    {!isComplete && totalCount > 0 && arrivedCount === totalCount && (
+                      <div style={{ marginTop: "1rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                        <button className="btn-primary" style={{ width: "auto" }}
+                          onClick={() => handleMarkComplete(order.id)} disabled={saving[`complete_${order.id}`]}>
+                          {saving[`complete_${order.id}`] ? "..." : "✓ Mark Complete"}
+                        </button>
+                        {msg[`complete_${order.id}`] === "success" && <span style={{ color:"var(--success)", fontSize:"0.8rem" }}>✓ Added to stock</span>}
+                        {msg[`complete_${order.id}`] === "error"   && <span style={{ color:"var(--danger)",  fontSize:"0.8rem" }}>✗ Error</span>}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

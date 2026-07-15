@@ -42,10 +42,13 @@ service cloud.firestore {
       // Owner can read their own docs; admins can read all
       allow read: if isAuthed() && (isOwner(resource.data.requestedBy) || isAdmin());
 
-      // Owner can update their OWN draft (save draft, submit draft)
-      // Admin can update any order (approve/reject/review)
+      // Owner can update their OWN order only while it's still a draft
+      // (save draft, submit draft). Once it leaves draft status, the
+      // lifecycle (review, vendor negotiation, payment, receiving, etc.)
+      // is admin-driven only.
       allow update: if isAuthed() && (
-                      isOwner(resource.data.requestedBy) || isAdmin()
+                      isAdmin() ||
+                      (isOwner(resource.data.requestedBy) && resource.data.status == 'draft')
                     );
 
       // Owner can delete their own DRAFT; admin can delete anything

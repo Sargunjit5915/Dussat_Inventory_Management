@@ -5,21 +5,16 @@ import { useAuth } from "../context/AuthContext";
 import {
   saveDraftOrder, submitOrderRequest, getUserDrafts,
   getUserOrders, deleteDraft,
-  ITEM_TYPES, CATEGORIES, PROJECTS, PRIORITIES
+  ITEM_TYPES, CATEGORIES, PROJECTS, PRIORITIES, ORDER_CLASSES,
+  normalizeStatus,
 } from "../firebase/firestoreService";
+import OrderStageTimeline from "../components/OrderStageTimeline";
 
-const emptyItem = { name: "", type: "", quantity: "", estimatedAmount: "", notes: "" };
+const emptyItem = { name: "", type: "", orderClass: "", quantity: "", estimatedAmount: "", notes: "" };
 
 const emptyCart = {
   vendorSite: "", orderLink: "", projectName: "", category: "",
   priority: "", notes: "", items: [{ ...emptyItem }],
-};
-
-const STATUS_STYLE = {
-  pending:   { label: "Pending",   cls: "badge--warning"    },
-  approved:  { label: "Approved",  cls: "badge--active"     },
-  rejected:  { label: "Rejected",  cls: "badge--faulty"     },
-  completed: { label: "Completed", cls: "badge--returnable" },
 };
 
 export default function OrderRequests() {
@@ -32,6 +27,7 @@ export default function OrderRequests() {
   const [cart, setCart]         = useState(emptyCart);
   const [saving, setSaving]     = useState(false);
   const [saveMsg, setSaveMsg]   = useState(null);
+  const [detailOrder, setDetailOrder] = useState(null);
 
   useEffect(() => { fetchAll(); }, []);
 
@@ -167,13 +163,13 @@ export default function OrderRequests() {
             <div className="list-section">
               <h3 className="section-title">Submitted Orders ({orders.length})</h3>
               {orders.map((o) => (
-                <div key={o.id} className="order-card">
+                <div key={o.id} className="order-card order-card--clickable" onClick={() => setDetailOrder(o)}>
                   <div className="order-card-info">
                     <strong>{o.vendorSite || "—"}</strong>
                     <span>{o.items?.length || 0} item{o.items?.length !== 1 ? "s" : ""}</span>
                     <span>{o.projectName || "—"}</span>
                     <span>{o.category || "—"}</span>
-                    <span className={`badge ${STATUS_STYLE[o.status]?.cls}`}>{STATUS_STYLE[o.status]?.label ?? o.status}</span>
+                    <OrderStageTimeline status={o.status} variant="badge" />
                   </div>
                   <div className="order-card-meta">
                     {o.estimatedAmount && <span>Est. ₹{Number(o.estimatedAmount).toLocaleString("en-IN")}</span>}
@@ -187,6 +183,62 @@ export default function OrderRequests() {
             <div className="empty-state"><p>No orders yet. Click "New Order List" to get started.</p></div>
           )}
         </>
+      )}
+
+      {detailOrder && (
+        <div className="modal-overlay" onClick={() => setDetailOrder(null)}>
+          <div className="modal modal--wide modal--xl" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{detailOrder.vendorSite || "Order"}</h3>
+              <button className="modal-close" onClick={() => setDetailOrder(null)}>✕</button>
+            </div>
+
+            <OrderStageTimeline status={detailOrder.status} variant="timeline" />
+
+            {(() => {
+              const stage = normalizeStatus(detailOrder.status);
+              const showVendor  = !["draft", "submitted", "approved", "given_to_vendor"].includes(stage);
+              const showArrived = ["order_placed", "completed"].includes(stage);
+              return (
+                <table className="results-table">
+                  <thead>
+                    <tr>
+                      <th>#</th><th>Item</th><th>Class</th><th>Qty</th><th>Amount (₹)</th>
+                      {showVendor && <><th>Vendor Available</th><th>Vendor Note</th></>}
+                      {showArrived && <th>Arrived</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {detailOrder.items?.map((item, idx) => (
+                      <tr key={idx}>
+                        <td style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "0.7rem" }}>{idx + 1}</td>
+                        <td className="td-name">{item.name}</td>
+                        <td>{item.orderClass || "—"}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.estimatedAmount ? `₹${Number(item.estimatedAmount).toLocaleString("en-IN")}` : "—"}</td>
+                        {showVendor && (
+                          <>
+                            <td>{item.vendorAvailable || "—"}</td>
+                            <td>{item.vendorNote || "—"}</td>
+                          </>
+                        )}
+                        {showArrived && (
+                          <td>{item.arrived ? <span className="badge badge--active">✓ Arrived</span> : <span className="badge badge--warning">Pending</span>}</td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              );
+            })()}
+
+            {detailOrder.adminRemarks && (
+              <div className="order-summary-grid" style={{ marginTop: "1rem" }}>
+                <div className="summary-item summary-item--full"><span>Remarks from Admin</span><strong>{detailOrder.adminRemarks}</strong></div>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -268,6 +320,13 @@ export default function OrderRequests() {
                 <select name="type" value={item.type} onChange={(e) => handleItemChange(idx, e)}>
                   <option value="">Select...</option>
                   {ITEM_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Class</label>
+                <select name="orderClass" value={item.orderClass} onChange={(e) => handleItemChange(idx, e)}>
+                  <option value="">Select...</option>
+                  {ORDER_CLASSES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="form-group">

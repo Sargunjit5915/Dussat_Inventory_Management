@@ -1,0 +1,336 @@
+[
+  {
+    "id": "8KRL9ISdRCYDHVlRkIPR",
+    "pvNumber": "—",
+    "date": "2026-05-06",
+    "description": "Amazon",
+    "descriptionLower": "amazon",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "amount": 66,
+    "gstAmount": null,
+    "otherAmount": null,
+    "totalAmount": 66,
+    "payee": "Commander Mukesh Saini",
+    "sourceOrderId": "LgEVoH6DgYyOvVd2p5He",
+    "items": [
+      {
+        "name": "USB A Female (10)",
+        "quantity": 1,
+        "storageLocation": "Pending assignment",
+        "notes": "https://www.amazon.in/dp/B08LGP2DJS?ref=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ&ref_=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ&social_share=cm_sw_r_cso_wa_apan_dp_RB7RHGYC1YVMRB47Y6EQ",
+        "type": "Capital"
+      }
+    ],
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "createdAt": {
+      "_seconds": 1778064380,
+      "_nanoseconds": 610000000
+    },
+    "updatedAt": {
+      "_seconds": 1778064380,
+      "_nanoseconds": 610000000
+    }
+  },
+  {
+    "id": "HPn9lxhhQODij8D9conU",
+    "date": "2026-04-15",
+    "description": "Indian Robo Store ",
+    "descriptionLower": "indian robo store ",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "gstAmount": null,
+    "otherAmount": null,
+    "payee": "Commander Mukesh Saini",
+    "sourceOrderId": "BI05aETgJHmC1FiioIn6",
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "createdAt": {
+      "_seconds": 1776251718,
+      "_nanoseconds": 749000000
+    },
+    "totalAmount": 9298,
+    "amount": 9298,
+    "items": [
+      {
+        "notes": "https://indianrobostore.com/product/hglrc-m100-pro-gps-for-rc-fpv-racing-drone-quadcopter",
+        "name": "HGLRC M100 PRO GPS ",
+        "storageLocation": "Pending assignment",
+        "quantity": 1,
+        "type": "Capital"
+      },
+      {
+        "name": "RC Radiomaster m2",
+        "quantity": 1,
+        "storageLocation": "Pending assignment",
+        "notes": "https://indianrobostore.com/product/radiomaster-pocket-radio-controller-m2-elrs-gray",
+        "type": "Capital"
+      }
+    ],
+    "updatedAt": {
+      "_seconds": 1776251719,
+      "_nanoseconds": 566000000
+    },
+    "pvNumber": "PV-361"
+  },
+  {
+    "id": "O61OwmTGVzWFKqdefonz",
+    "pvNumber": "—",
+    "date": "2026-04-15",
+    "description": "Amazon ",
+    "descriptionLower": "amazon ",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "gstAmount": null,
+    "otherAmount": null,
+    "payee": "Commander Mukesh Saini",
+    "sourceOrderId": "ZNvULSCDskW8u3CYO6Cr",
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "createdAt": {
+      "_seconds": 1776251915,
+      "_nanoseconds": 18000000
+    },
+    "totalAmount": 1748,
+    "amount": 1748,
+    "items": [
+      {
+        "name": "CP2102",
+        "type": "Capital",
+        "notes": "https://www.amazon.in/gp/product/B079R3VMRY/ref=ox_sc_act_title_2?smid=AJ6SIZC8YQDZX&psc=1",
+        "quantity": 5,
+        "storageLocation": "Pending assignment"
+      },
+      {
+        "name": "Display Unit",
+        "quantity": 3,
+        "storageLocation": "Pending assignment",
+        "notes": "https://www.amazon.in/SmartElex-2-4-inch-Resistive-Interface-Controller/dp/B0GFCWN4V7/ref=sr_1_17?crid=WMHYVCY2QJ46&dib=eyJ2IjoiMSJ9.1oYlqHpZbByX3oRtek-S0wtCh1fUESLqzMgwz3qriC6LAcLykv0Y2Q3ylN9I66dnGb5J6opUlcQ3HSXcGMgfhEJsGcA0IptRVbo4nmD_IaVrqs7VUik7CK9QjhtTbozDvWw83OBdxWLQYX14qjQWew1WkpL2bQ6nds2QkLH3Usw7KijxgpM-e1qYVVHBgPwNcKfBycdqj5cYW33nmafZrd25bGWhb9qTJaRIBnNokIvqr0AgfCwO5ZySSaxuNCS4SukQyoYnYLmfABPlXgkMWJ5LhHikb8Ves263ByXpNA0.jqyIs9nSea_7NSXUr8dX2TsTsOF8Oomhru9L9jFxgnk&dib_tag=se&keywords=2.8+inch+SPI+Screen+Module+TFT+Interface+SMART+ELEX&nsdOptOutParam=true&qid=1776168483&s=industrial&sprefix=2.8+inch+spi+screen+module+tft+interface+smart+el%2Cindustrial%2C383&sr=1-17",
+        "type": "Capital"
+      }
+    ],
+    "updatedAt": {
+      "_seconds": 1776760034,
+      "_nanoseconds": 394000000
+    }
+  },
+  {
+    "id": "VWkrq5qDZ5vYsySD9Dzs",
+    "date": "2026-04-21",
+    "description": "Zerodrag",
+    "descriptionLower": "zerodrag",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "amount": 1549,
+    "otherAmount": null,
+    "totalAmount": 1549,
+    "sourceOrderId": "dbnyQBsvAob8iQHxfXV5",
+    "items": [
+      {
+        "name": "Zerodrag Nexus 1 Express LRS 2.4GHz Receiver",
+        "quantity": 5,
+        "storageLocation": "Pending assignment",
+        "notes": "https://zerodrag.in/products/express-lrs-receiver-2-4ghz-made-in-india?srsltid=AfmBOooPsXkWIY56Lq4GuFa68YQv5sKdajTLGoPrPzuhu3czpUpxlw2_",
+        "type": "Capital"
+      }
+    ],
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "o2wglHAmyhN39gd3wlRRpUcyBgz1",
+    "createdAt": {
+      "_seconds": 1776760028,
+      "_nanoseconds": 481000000
+    },
+    "updatedAt": {
+      "_seconds": 1776760028,
+      "_nanoseconds": 481000000
+    },
+    "pvNumber": "",
+    "gstAmount": 238.68,
+    "payee": "Commander Mukesh Saini"
+  },
+  {
+    "id": "XelnsvHGdvmxXmVNOhTL",
+    "pvNumber": "348",
+    "date": "2026-02-27",
+    "description": "Robu.in",
+    "descriptionLower": "robu.in",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "amount": 3619.09,
+    "gstAmount": 506.33,
+    "otherAmount": null,
+    "otherAmountNotes": null,
+    "totalAmount": 4125.42,
+    "payee": "Commander Mukesh Saini",
+    "items": [
+      {
+        "name": "pro range propellors 3 blade",
+        "quantity": 5,
+        "storageLocation": "Cupboard 12",
+        "notes": ""
+      },
+      {
+        "name": "pro range terminal kit",
+        "quantity": 1,
+        "storageLocation": "Cupboard 13",
+        "notes": ""
+      },
+      {
+        "name": "Adafruit imu breakout board",
+        "quantity": 1,
+        "storageLocation": "Cupboard 13",
+        "notes": ""
+      }
+    ],
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "createdAt": {
+      "_seconds": 1777625608,
+      "_nanoseconds": 805000000
+    },
+    "updatedAt": {
+      "_seconds": 1777625608,
+      "_nanoseconds": 805000000
+    }
+  },
+  {
+    "id": "j4fWVQBryU1sL0xAgcPH",
+    "pvNumber": "—",
+    "date": "2026-04-21",
+    "description": "Indian Robo Store",
+    "descriptionLower": "indian robo store",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "gstAmount": null,
+    "otherAmount": null,
+    "sourceOrderId": "R9UV45pCUdTgv32veF53",
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "o2wglHAmyhN39gd3wlRRpUcyBgz1",
+    "createdAt": {
+      "_seconds": 1776760007,
+      "_nanoseconds": 513000000
+    },
+    "totalAmount": 10022,
+    "items": [
+      {
+        "name": "Radiomaster Pocket M2 RC",
+        "type": "Capital",
+        "notes": "https://indianrobostore.com/product/radiomaster-pocket-radio-controller-m2-elrs-charcoal",
+        "quantity": 4,
+        "storageLocation": "Pending assignment"
+      },
+      {
+        "name": "M100 Pro Gps ",
+        "type": "Capital",
+        "notes": "https://indianrobostore.com/product/hglrc-m100-pro-gps-for-rc-fpv-racing-drone-quadcopter",
+        "quantity": 4,
+        "storageLocation": "Pending assignment"
+      },
+      {
+        "quantity": 4,
+        "storageLocation": "Pending assignment",
+        "name": "7A Buck Converter",
+        "type": "Capital",
+        "notes": "https://indianrobostore.com/product/ubec-7a-receiver-external-buck-dc-voltage-regulator-module-for-drones"
+      },
+      {
+        "name": "18650 battery",
+        "quantity": 5,
+        "storageLocation": "Pending assignment",
+        "notes": "",
+        "type": "Capital"
+      }
+    ],
+    "updatedAt": {
+      "_seconds": 1776760012,
+      "_nanoseconds": 731000000
+    },
+    "amount": 10002,
+    "payee": "Commander Mukesh Saini"
+  },
+  {
+    "id": "k8yyq3UkKOT8tjDAALOF",
+    "date": "2026-04-21",
+    "description": "ThinkRobotics",
+    "descriptionLower": "thinkrobotics",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "gstAmount": null,
+    "otherAmount": null,
+    "totalAmount": 10000,
+    "sourceOrderId": "7s1R8MeXTjzP9sAmxCqX",
+    "items": [
+      {
+        "name": "Inertial Navigation System",
+        "quantity": 1,
+        "storageLocation": "Pending assignment",
+        "notes": "https://thinkrobotics.com/products/imu-inertial-navigation-module-ros1-ros2?variant=48424711946557",
+        "type": "Capital"
+      }
+    ],
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "o2wglHAmyhN39gd3wlRRpUcyBgz1",
+    "createdAt": {
+      "_seconds": 1776760023,
+      "_nanoseconds": 599000000
+    },
+    "updatedAt": {
+      "_seconds": 1776760023,
+      "_nanoseconds": 599000000
+    },
+    "pvNumber": "PV-362",
+    "amount": 9999.9,
+    "payee": "Commander Mukesh Saini"
+  },
+  {
+    "id": "uYlaEahFR16kaZImOGYX",
+    "pvNumber": "—",
+    "date": "2026-05-01",
+    "description": "uavmarketplace.in",
+    "descriptionLower": "uavmarketplace.in",
+    "type": "Capital",
+    "category": "DGT",
+    "projectName": "Non-Patang",
+    "amount": 189,
+    "gstAmount": null,
+    "otherAmount": null,
+    "totalAmount": 189,
+    "payee": "Commander Mukesh Saini",
+    "sourceOrderId": "ggCYejjFC1roJoXr1e6m",
+    "items": [
+      {
+        "name": "HQ PROP Thin Electric Fixed Wing Propeller CW",
+        "quantity": 3,
+        "storageLocation": "Pending assignment",
+        "notes": "",
+        "type": "Capital"
+      }
+    ],
+    "status": "active",
+    "faultyCategory": null,
+    "addedBy": "CuHxH3w4bwMnKAtaqMzj94AzRIj2",
+    "createdAt": {
+      "_seconds": 1777626418,
+      "_nanoseconds": 905000000
+    },
+    "updatedAt": {
+      "_seconds": 1777626418,
+      "_nanoseconds": 905000000
+    }
+  }
+]
